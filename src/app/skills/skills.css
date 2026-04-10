@@ -1,0 +1,13 @@
+/* Tool icon colors - force override */
+.tool-icon-docker {
+  color: #2496ed !important;
+}
+.tool-icon-github {
+  color: #8b5cf6 !important;
+}
+.tool-icon-agile {
+  color: #fbbf24 !important;
+}
+.tool-icon-uml {
+  color: #14b8a6 !important;
+}

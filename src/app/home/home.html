@@ -1,0 +1,100 @@
+<section
+  class="hero min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-indigo-950 text-white py-20 relative overflow-hidden flex items-center"
+>
+  <!-- Animated background -->
+  <div class="absolute inset-0 -z-10">
+    <div
+      class="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl animate-pulse"
+    ></div>
+    <div
+      class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl animate-pulse"
+      style="animation-delay: 1s"
+    ></div>
+    <div
+      class="absolute top-1/2 left-1/2 w-64 h-64 bg-pink-600/10 rounded-full blur-3xl animate-pulse"
+      style="animation-delay: 2s"
+    ></div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+    <div class="text-center">
+      <!-- Avatar / Initial -->
+      <div class="mb-8">
+        <div
+          class="w-28 h-28 mx-auto rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 p-1"
+        >
+          <div class="w-full h-full rounded-full bg-gray-900 flex items-center justify-center">
+            <span class="text-4xl font-bold gradient-text">GG</span>
+          </div>
+        </div>
+      </div>
+
+      <h1 class="text-5xl md:text-7xl font-extrabold mb-4 leading-tight tracking-tight">
+        <span class="text-white">Desarrollador</span>
+        <span class="block gradient-text">Full-Stack</span>
+      </h1>
+      <h2 class="text-2xl md:text-3xl font-semibold mb-8 text-gray-300">
+        Especialista en IA & Soluciones Autónomas
+      </h2>
+      <p class="text-lg md:text-xl mb-12 max-w-3xl mx-auto text-gray-400 leading-relaxed">
+        Creando soluciones innovadoras que fusionan lo mejor del desarrollo web tradicional con el
+        poder transformador de la inteligencia artificial para convertir ideas complejas en realidad
+        tangible y escalable.
+      </p>
+
+      <!-- CTA Buttons with hover effect -->
+      <div class="btn-group flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <a
+          (click)="scrollToSection('projects')"
+          class="cta-btn group relative px-8 py-4 rounded-xl font-bold text-lg overflow-hidden cursor-pointer text-white"
+        >
+          <span
+            class="absolute inset-0 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 transition-all duration-500 group-hover:scale-110"
+          ></span>
+          <span
+            class="absolute inset-0 bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          ></span>
+          <span class="relative z-10 flex items-center gap-2">
+            <mat-icon class="transition-transform duration-300 group-hover:rotate-12"
+              >code</mat-icon
+            >
+            <span class="transition-all duration-300 group-hover:tracking-wider"
+              >Ver Mis Proyectos</span
+            >
+          </span>
+        </a>
+        <a
+          (click)="scrollToSection('contact')"
+          class="cta-btn group relative px-8 py-4 rounded-xl font-bold text-lg overflow-hidden cursor-pointer border-2 border-indigo-500/50 text-white"
+        >
+          <span
+            class="absolute inset-0 bg-indigo-500/10 transition-all duration-500 group-hover:bg-indigo-500/20"
+          ></span>
+          <span
+            class="relative z-10 flex items-center gap-2 text-indigo-300 group-hover:text-white transition-colors duration-300"
+          >
+            <mat-icon class="transition-transform duration-300 group-hover:scale-110"
+              >contact_mail</mat-icon
+            >
+            <span class="transition-all duration-300 group-hover:tracking-wider">Contáctame</span>
+          </span>
+        </a>
+      </div>
+
+      <!-- Scroll indicator -->
+      <div class="mt-16 flex justify-center">
+        <div class="flex space-x-3">
+          <div class="w-2.5 h-2.5 bg-indigo-500 rounded-full animate-bounce"></div>
+          <div
+            class="w-2.5 h-2.5 bg-purple-500 rounded-full animate-bounce"
+            style="animation-delay: 0.15s"
+          ></div>
+          <div
+            class="w-2.5 h-2.5 bg-pink-500 rounded-full animate-bounce"
+            style="animation-delay: 0.3s"
+          ></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
