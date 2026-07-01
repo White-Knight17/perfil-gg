@@ -19,6 +19,10 @@ html {
   scroll-behavior: smooth;
 }
 
+html {
+  background-color: #030712;
+}
+
 body {
   font-family:
     'Inter',
@@ -27,8 +31,13 @@ body {
     'Segoe UI',
     Roboto,
     sans-serif;
-  background-color: var(--darker-bg);
+  background-color: #030712;
   color: var(--text-primary);
+}
+
+/* Ensure main content area never shows a different background */
+main#main-content {
+  background-color: #030712;
 }
 
 /* Headings */
