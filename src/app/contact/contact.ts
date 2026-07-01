@@ -2,11 +2,12 @@ import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { ScrollRevealDirective } from '../directives/scroll-reveal.directive';
 
 @Component({
   selector: 'app-contact',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ScrollRevealDirective],
   templateUrl: './contact.html',
   styleUrl: './contact.css',
 })

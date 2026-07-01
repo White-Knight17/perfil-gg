@@ -1,89 +1,162 @@
-<!-- Skip to content link -->
-<a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+<!-- Preloader — full-screen overlay on top of everything -->
+<app-preloader />
 
-<!-- Navigation -->
-<nav
-  aria-label="Principal"
-  class="fixed top-0 left-0 right-0 z-50 bg-gray-900/80 backdrop-blur-md border-b border-gray-700/50"
->
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex items-center justify-between h-16">
-      <a href="#home" class="text-xl font-bold gradient-text">German Giorgio</a>
-      <div class="hidden md:flex space-x-8">
-        <a
-          href="#home"
-          class="nav-link flex items-center gap-1 px-2 py-1 rounded-md text-gray-300 hover:text-white transition-colors"
-          aria-current="page"
+<!-- Main site content — visible when preloader overlay fades out -->
+<div class="site-content">
+  <!-- Skip to content link -->
+  <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+
+  <!-- Navigation -->
+  <nav
+    aria-label="Principal"
+    class="fixed top-0 left-0 right-0 z-50 bg-gray-900/80 backdrop-blur-md border-b border-gray-700/50"
+  >
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="#home" class="text-xl font-bold gradient-text">German Giorgio</a>
+
+        <!-- Desktop nav links -->
+        <div class="hidden md:flex space-x-8">
+          <a
+            (click)="scrollTo('home')"
+            class="nav-link flex items-center gap-1 px-2 py-1 rounded-md text-gray-300 hover:text-white transition-colors"
+            [class.active]="activeSection === 'home'"
+          >
+            Inicio
+          </a>
+          <a
+            (click)="scrollTo('projects')"
+            class="nav-link flex items-center gap-1 px-2 py-1 rounded-md text-gray-300 hover:text-white transition-colors"
+            [class.active]="activeSection === 'projects'"
+          >
+            Proyectos
+          </a>
+          <a
+            (click)="scrollTo('skills')"
+            class="nav-link flex items-center gap-1 px-2 py-1 rounded-md text-gray-300 hover:text-white transition-colors"
+            [class.active]="activeSection === 'skills'"
+          >
+            Habilidades
+          </a>
+          <a
+            (click)="scrollTo('contact')"
+            class="nav-link flex items-center gap-1 px-2 py-1 rounded-md text-gray-300 hover:text-white transition-colors"
+            [class.active]="activeSection === 'contact'"
+          >
+            Contacto
+          </a>
+        </div>
+
+        <!-- Hamburger button (mobile only) -->
+        <button
+          class="hamburger-btn md:hidden relative z-[60] flex flex-col items-center justify-center w-10 h-10 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+          (click)="toggleMobileMenu()"
+          [attr.aria-label]="mobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'"
+          [attr.aria-expanded]="mobileMenuOpen"
         >
-          Inicio
-        </a>
-        <a
-          href="#projects"
-          class="nav-link flex items-center gap-1 px-2 py-1 rounded-md text-gray-300 hover:text-white transition-colors"
-        >
-          Proyectos
-        </a>
-        <a
-          href="#skills"
-          class="nav-link flex items-center gap-1 px-2 py-1 rounded-md text-gray-300 hover:text-white transition-colors"
-        >
-          Habilidades
-        </a>
-        <a
-          href="#contact"
-          class="nav-link flex items-center gap-1 px-2 py-1 rounded-md text-gray-300 hover:text-white transition-colors"
-        >
-          Contacto
-        </a>
+          <span #hamburgerBar1 class="hamburger-bar block w-6 h-[2px] bg-gray-300 rounded origin-center"></span>
+          <span #hamburgerBar2 class="hamburger-bar block w-6 h-[2px] bg-gray-300 rounded mt-[5px] origin-center"></span>
+          <span #hamburgerBar3 class="hamburger-bar block w-6 h-[2px] bg-gray-300 rounded mt-[5px] origin-center"></span>
+        </button>
       </div>
     </div>
+  </nav>
+
+  <!-- Mobile menu overlay -->
+  <div
+    #mobileMenuOverlay
+    class="mobile-menu-overlay fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
+    style="display: none; opacity: 0;"
+    (click)="closeMobileMenu()"
+    aria-hidden="true"
+  ></div>
+
+  <!-- Mobile menu panel -->
+  <div
+    #mobileMenuPanel
+    class="mobile-menu-panel fixed top-0 right-0 z-50 h-full w-72 max-w-[85vw] bg-gray-900 border-l border-gray-700/50 shadow-2xl"
+    style="transform: translateX(100%);"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-label]="'Menú de navegación'"
+  >
+    <nav class="flex flex-col items-start justify-center h-full px-8 gap-6">
+      <a
+        #mobileMenuItem
+        (click)="scrollTo('home'); closeMobileMenu()"
+        class="text-xl font-medium text-gray-300 hover:text-white transition-colors"
+      >
+        Inicio
+      </a>
+      <a
+        #mobileMenuItem
+        (click)="scrollTo('projects'); closeMobileMenu()"
+        class="text-xl font-medium text-gray-300 hover:text-white transition-colors"
+      >
+        Proyectos
+      </a>
+      <a
+        #mobileMenuItem
+        (click)="scrollTo('skills'); closeMobileMenu()"
+        class="text-xl font-medium text-gray-300 hover:text-white transition-colors"
+      >
+        Habilidades
+      </a>
+      <a
+        #mobileMenuItem
+        (click)="scrollTo('contact'); closeMobileMenu()"
+        class="text-xl font-medium text-gray-300 hover:text-white transition-colors"
+      >
+        Contacto
+      </a>
+    </nav>
   </div>
-</nav>
 
-<!-- Main content -->
-<main id="main-content">
-  <!-- All sections in one page -->
-  <app-home id="home"></app-home>
-  <app-projects id="projects"></app-projects>
-  <app-skills id="skills"></app-skills>
-  <app-contact id="contact"></app-contact>
-</main>
+  <!-- Main content -->
+  <main id="main-content">
+    <!-- All sections in one page -->
+    <app-home id="home"></app-home>
+    <app-projects id="projects"></app-projects>
+    <app-skills id="skills"></app-skills>
+    <app-contact id="contact"></app-contact>
+  </main>
 
-<!-- Footer -->
-<footer class="bg-gray-950 text-gray-400 py-12 border-t border-gray-800">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex flex-col items-center gap-6">
-      <h3 class="text-xl font-semibold text-white">Conectemos</h3>
-      <div class="flex gap-4">
-        <!-- LinkedIn -->
-        <a
-          href="https://www.linkedin.com/in/germangiorgio/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-600/10 border border-blue-600/30 text-blue-400 hover:bg-blue-600/20 hover:border-blue-500/50 transition-all duration-300 hover:-translate-y-1"
-          aria-label="Perfil de LinkedIn de German Giorgio"
-        >
-          <i class="fa-brands fa-linkedin text-xl"></i>
-          <span class="font-medium">LinkedIn</span>
-        </a>
-        <!-- WhatsApp -->
-        <a
-          href="https://wa.me/5493541617031"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="flex items-center gap-2 px-6 py-3 rounded-xl bg-green-600/10 border border-green-600/30 text-green-400 hover:bg-green-600/20 hover:border-green-500/50 transition-all duration-300 hover:-translate-y-1"
-          aria-label="Chat de WhatsApp con German Giorgio"
-        >
-          <i class="fa-brands fa-whatsapp text-xl"></i>
-          <span class="font-medium">WhatsApp</span>
-        </a>
+  <!-- Footer -->
+  <footer class="bg-gray-950 text-gray-400 py-12 border-t border-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col items-center gap-6">
+        <h3 class="text-xl font-semibold text-white">Conectemos</h3>
+        <div class="flex gap-4">
+          <!-- LinkedIn -->
+          <a
+            href="https://www.linkedin.com/in/germangiorgio/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-600/10 border border-blue-600/30 text-blue-400 hover:bg-blue-600/20 hover:border-blue-500/50 transition-all duration-300 hover:-translate-y-1"
+            aria-label="Perfil de LinkedIn de German Giorgio"
+          >
+            <i class="fa-brands fa-linkedin text-xl"></i>
+            <span class="font-medium">LinkedIn</span>
+          </a>
+          <!-- WhatsApp -->
+          <a
+            href="https://wa.me/5493541617031"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center gap-2 px-6 py-3 rounded-xl bg-green-600/10 border border-green-600/30 text-green-400 hover:bg-green-600/20 hover:border-green-500/50 transition-all duration-300 hover:-translate-y-1"
+            aria-label="Chat de WhatsApp con German Giorgio"
+          >
+            <i class="fa-brands fa-whatsapp text-xl"></i>
+            <span class="font-medium">WhatsApp</span>
+          </a>
+        </div>
+        <p class="text-sm text-gray-500 mt-4">
+          &copy; 2026 German Giorgio. Todos los derechos reservados.
+        </p>
       </div>
-      <p class="text-sm text-gray-500 mt-4">
-        &copy; 2026 German Giorgio. Todos los derechos reservados.
-      </p>
     </div>
-  </div>
-</footer>
+  </footer>
+</div>
 
 <style>
   .skip-link {
