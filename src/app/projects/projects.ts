@@ -4,11 +4,23 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { GithubService } from '../github';
 import { GitHubRepository } from '../github';
+import { ScrollRevealDirective } from '../directives/scroll-reveal.directive';
+import { StaggerListDirective } from '../directives/stagger-list.directive';
+import { CounterAnimationDirective } from '../directives/counter-animation.directive';
+import { TiltDirective } from '../directives/tilt.directive';
 
 @Component({
   selector: 'app-projects',
   standalone: true,
-  imports: [MatCardModule, MatButtonModule, MatIconModule],
+  imports: [
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    ScrollRevealDirective,
+    StaggerListDirective,
+    CounterAnimationDirective,
+    TiltDirective,
+  ],
   templateUrl: './projects.html',
   styleUrl: './projects.css',
 })

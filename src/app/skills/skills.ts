@@ -1,14 +1,91 @@
-import { Component } from '@angular/core';
+import {
+  Component,
+  AfterViewInit,
+  OnDestroy,
+  ViewChild,
+  ElementRef,
+  Inject,
+  PLATFORM_ID,
+} from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { ScrollRevealDirective } from '../directives/scroll-reveal.directive';
+import { AnimationConfigService } from '../services/animation-config.service';
 
 @Component({
   selector: 'app-skills',
   standalone: true,
-  imports: [MatIconModule],
+  imports: [MatIconModule, ScrollRevealDirective],
   templateUrl: './skills.html',
   styleUrl: './skills.css',
 })
-export class Skills {
+export class Skills implements AfterViewInit, OnDestroy {
+  @ViewChild('skillsSection') skillsSection!: ElementRef<HTMLElement>;
+
+  private readonly isBrowser: boolean;
+  private scrollTrigger?: ScrollTrigger;
+  private barTweens: gsap.core.Tween[] = [];
+
+  constructor(
+    @Inject(PLATFORM_ID) platformId: object,
+    private readonly animationConfig: AnimationConfigService,
+  ) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
+
+  ngAfterViewInit(): void {
+    if (!this.isBrowser) return;
+
+    this.animateSkillBars();
+  }
+
+  ngOnDestroy(): void {
+    this.barTweens.forEach((t) => t.kill());
+    this.barTweens = [];
+    this.scrollTrigger?.kill();
+  }
+
+  /**
+   * Animate all `.skill-fill` bars from 0% to their target percentage
+   * using GSAP ScrollTrigger scrub.
+   */
+  private animateSkillBars(): void {
+    const fills: HTMLElement[] = Array.from(
+      this.skillsSection.nativeElement.querySelectorAll('.skill-fill'),
+    );
+    if (!fills.length) return;
+
+    // Store target widths and set initial to 0
+    const targets: { el: HTMLElement; level: number }[] = fills.map((el) => {
+      const level = parseInt(el.dataset['level'] ?? '0', 10);
+      el.style.width = '0%';
+      return { el, level };
+    });
+
+    if (this.animationConfig.reducedMotion()) {
+      targets.forEach(({ el, level }) => {
+        el.style.width = `${level}%`;
+      });
+      return;
+    }
+
+    targets.forEach(({ el, level }) => {
+      const tween = gsap.to(el, {
+        width: `${level}%`,
+        duration: 1.5,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: this.skillsSection.nativeElement,
+          start: 'top 75%',
+          toggleActions: 'play none none none',
+        },
+      });
+      this.barTweens.push(tween);
+    });
+  }
+
   frontendSkills = [
     { name: 'Angular', level: 90 },
     { name: 'TypeScript', level: 85 },
