@@ -1,10 +1,8 @@
 import { Component, AfterViewInit, OnDestroy, Inject, PLATFORM_ID, ElementRef, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { isPlatformBrowser } from '@angular/common';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { BrowserMockup } from '../components/browser-mockup/browser-mockup';
-import { TiltDirective } from '../directives/tilt.directive';
 
 interface ShowcaseProject {
   id: string;
@@ -18,7 +16,7 @@ interface ShowcaseProject {
 @Component({
   selector: 'app-showcase',
   standalone: true,
-  imports: [CommonModule, BrowserMockup, TiltDirective],
+  imports: [BrowserMockup],
   templateUrl: './showcase.html',
   styleUrl: './showcase.css'
 })
