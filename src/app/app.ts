@@ -18,6 +18,7 @@ import { Home } from './home/home';
 import { Projects } from './projects/projects';
 import { Skills } from './skills/skills';
 import { Contact } from './contact/contact';
+import { Showcase } from './showcase/showcase';
 import { Preloader } from './preloader/preloader';
 import { LenisService } from './services/lenis.service';
 import { PreloaderService } from './services/preloader.service';
@@ -37,7 +38,7 @@ import { PreloaderService } from './services/preloader.service';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [Preloader, Home, Projects, Skills, Contact],
+  imports: [Preloader, Home, Projects, Skills, Contact, Showcase],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })

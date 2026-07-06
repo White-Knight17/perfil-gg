@@ -1,0 +1,43 @@
+<section #showcaseSection class="showcase-section">
+  <div class="showcase-container">
+    <div class="section-header" appScrollReveal>
+      <h2 class="gradient-text">Proyectos Destacados</h2>
+      <p class="subtitle">Trabajos que he desarrollado para clientes reales</p>
+    </div>
+
+    <div class="showcase-track" #showcaseTrack>
+      @for (project of projects; track project.id) {
+        <div class="project-slide">
+          <div class="project-content">
+            <div class="mockup-container">
+              <app-browser-mockup [url]="project.url">
+                <img [src]="project.screenshot" [alt]="project.name" loading="lazy">
+              </app-browser-mockup>
+            </div>
+
+            <div class="project-info" appScrollReveal>
+              <h3 class="project-name">{{ project.name }}</h3>
+              <p class="project-description">{{ project.description }}</p>
+
+              <div class="stack-tags">
+                @for (tech of project.stack; track tech) {
+                  <span class="tech-tag">{{ tech }}</span>
+                }
+              </div>
+
+              <a [href]="project.url" target="_blank" rel="noopener noreferrer" class="view-project-btn">
+                Ver sitio en vivo
+                <span class="arrow">→</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="scroll-indicator">
+      <span>Scroll para explorar</span>
+      <div class="scroll-line"></div>
+    </div>
+  </div>
+</section>
