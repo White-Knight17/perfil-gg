@@ -43,3 +43,8 @@ __screenshots__/
 .DS_Store
 Thumbs.db
 .vercel
+
+# Playwright
+/playwright-report/
+/test-results/
+/e2e/.auth/
