@@ -38,6 +38,7 @@ export class Projects implements OnInit {
   loadGitHubProjects(): void {
     this.githubService.getUserRepositories().subscribe({
       next: (repos) => {
+        this.error = null;
         this.projects = repos
           .filter((repo) => !repo.fork)
           .sort((a, b) => b.stargazers_count - a.stargazers_count)
