@@ -26,19 +26,21 @@ test.describe('Portfolio Landing Page', () => {
     const nav = page.locator('nav[aria-label="Principal"]');
     await expect(nav).toBeAttached({ timeout: 8000 });
 
-    await expect(page.locator('text=Inicio')).toBeAttached();
-    await expect(page.locator('text=Proyectos')).toBeAttached();
-    await expect(page.locator('text=Habilidades')).toBeAttached();
-    await expect(page.locator('text=Contacto')).toBeAttached();
+    // Scope to desktop nav only (not mobile menu)
+    const desktopNav = nav.locator('.hidden.md\\:flex');
+    await expect(desktopNav.getByText('Inicio', { exact: true })).toBeAttached();
+    await expect(desktopNav.getByText('Proyectos', { exact: true })).toBeAttached();
+    await expect(desktopNav.getByText('Habilidades', { exact: true })).toBeAttached();
+    await expect(desktopNav.getByText('Contacto', { exact: true })).toBeAttached();
   });
 
   test('should display the hero section', async ({ page }) => {
     const hero = page.locator('app-home');
     await expect(hero).toBeAttached({ timeout: 8000 });
 
-    // Hero should have the main heading
-    await expect(page.locator('text=Desarrollador')).toBeAttached();
-    await expect(page.locator('text=Full-Stack')).toBeAttached();
+    // Hero should have the main heading — scope to hero only
+    await expect(hero.getByText('Desarrollador', { exact: true })).toBeAttached();
+    await expect(hero.getByText('Full-Stack', { exact: true })).toBeAttached();
   });
 
   test('should display the projects section with GitHub data', async ({ page }) => {
