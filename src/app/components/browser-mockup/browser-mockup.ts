@@ -78,8 +78,10 @@ import { TiltDirective } from '../../directives/tilt.directive';
 
     .browser-content img {
       width: 100%;
-      height: auto;
+      max-height: 60vh;
+      object-fit: contain;
       display: block;
+      background: #0f172a;
     }
   `]
 })

@@ -18,28 +18,32 @@
         <!-- Desktop nav links -->
         <div class="hidden md:flex space-x-8">
           <a
-            (click)="scrollTo('home')"
+            href="#home"
+            (click)="scrollTo($event, 'home')"
             class="nav-link flex items-center gap-1 px-2 py-1 rounded-md text-gray-300 hover:text-white transition-colors"
             [class.active]="activeSection === 'home'"
           >
             Inicio
           </a>
           <a
-            (click)="scrollTo('projects')"
+            href="#projects"
+            (click)="scrollTo($event, 'projects')"
             class="nav-link flex items-center gap-1 px-2 py-1 rounded-md text-gray-300 hover:text-white transition-colors"
             [class.active]="activeSection === 'projects'"
           >
             Proyectos
           </a>
           <a
-            (click)="scrollTo('skills')"
+            href="#skills"
+            (click)="scrollTo($event, 'skills')"
             class="nav-link flex items-center gap-1 px-2 py-1 rounded-md text-gray-300 hover:text-white transition-colors"
             [class.active]="activeSection === 'skills'"
           >
             Habilidades
           </a>
           <a
-            (click)="scrollTo('contact')"
+            href="#contact"
+            (click)="scrollTo($event, 'contact')"
             class="nav-link flex items-center gap-1 px-2 py-1 rounded-md text-gray-300 hover:text-white transition-colors"
             [class.active]="activeSection === 'contact'"
           >
@@ -83,28 +87,32 @@
     <nav class="flex flex-col items-start justify-center h-full px-8 gap-6">
       <a
         #mobileMenuItem
-        (click)="scrollTo('home'); closeMobileMenu()"
+        href="#home"
+        (click)="scrollTo($event, 'home'); closeMobileMenu()"
         class="text-xl font-medium text-gray-300 hover:text-white transition-colors"
       >
         Inicio
       </a>
       <a
         #mobileMenuItem
-        (click)="scrollTo('projects'); closeMobileMenu()"
+        href="#projects"
+        (click)="scrollTo($event, 'projects'); closeMobileMenu()"
         class="text-xl font-medium text-gray-300 hover:text-white transition-colors"
       >
         Proyectos
       </a>
       <a
         #mobileMenuItem
-        (click)="scrollTo('skills'); closeMobileMenu()"
+        href="#skills"
+        (click)="scrollTo($event, 'skills'); closeMobileMenu()"
         class="text-xl font-medium text-gray-300 hover:text-white transition-colors"
       >
         Habilidades
       </a>
       <a
         #mobileMenuItem
-        (click)="scrollTo('contact'); closeMobileMenu()"
+        href="#contact"
+        (click)="scrollTo($event, 'contact'); closeMobileMenu()"
         class="text-xl font-medium text-gray-300 hover:text-white transition-colors"
       >
         Contacto

@@ -72,6 +72,7 @@ export class CounterAnimationDirective implements AfterViewInit, OnDestroy {
         trigger: this.el.nativeElement,
         start: 'top 90%',
         toggleActions: 'play none none reverse',
+        scroller: document.body, // Required: Lenis uses body as scroller proxy
       },
     });
 

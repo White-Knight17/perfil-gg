@@ -60,6 +60,7 @@ export class Showcase implements AfterViewInit, OnDestroy {
       pin: true,
       scrub: 1,
       anticipatePin: 1,
+      scroller: document.body, // Required: Lenis uses body as scroller proxy
       onUpdate: (self) => {
         // Move track horizontally
         gsap.set(track, { x: -self.progress * totalWidth });

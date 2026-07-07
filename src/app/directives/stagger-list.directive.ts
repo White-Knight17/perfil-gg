@@ -67,12 +67,18 @@ export class StaggerListDirective implements AfterViewInit, OnDestroy {
       scrollTrigger: {
         trigger: this.el.nativeElement,
         start: 'top 85%',
+        scroller: document.body, // Required: Lenis uses body as scroller proxy
       },
       defaults: { duration: 0.5, ease: 'power3.out' },
     });
 
-    this.timeline.from(this.el.nativeElement.children, {
-      ...fromVars[this.animation()],
+    // Use set + to instead of from for robustness with SSR hydration
+    const children = this.el.nativeElement.children;
+    gsap.set(children, { ...fromVars[this.animation()] });
+    this.timeline.to(children, {
+      opacity: 1,
+      y: 0,
+      x: 0,
       stagger: this.stagger(),
     });
   }

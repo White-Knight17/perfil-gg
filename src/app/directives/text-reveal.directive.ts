@@ -60,16 +60,19 @@ export class TextRevealDirective implements AfterViewInit, OnDestroy {
       this.el.nativeElement.appendChild(span);
     }
 
-    this.animation = gsap.from(this.el.nativeElement.children, {
-      opacity: 0,
-      y: 20,
-      rotationX: -90,
+    // Use set + to instead of from for robustness with SSR hydration
+    gsap.set(this.el.nativeElement.children, { opacity: 0, y: 20, rotationX: -90 });
+    this.animation = gsap.to(this.el.nativeElement.children, {
+      opacity: 1,
+      y: 0,
+      rotationX: 0,
       stagger: this.stagger(),
       duration: this.duration(),
       ease: 'back.out(1.7)',
       scrollTrigger: {
         trigger: this.el.nativeElement,
         start: 'top 90%',
+        scroller: document.body, // Required: Lenis uses body as scroller proxy
       },
     });
   }

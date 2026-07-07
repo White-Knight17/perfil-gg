@@ -120,10 +120,17 @@ export class App implements AfterViewInit, OnDestroy {
   // ---------------------------------------------------------------------------
 
   /**
-   * Smooth-scroll to a section using Lenis when a nav link is clicked.
+   * Smooth-scroll to a section using Lenis when available,
+   * with native scrollIntoView fallback.
    */
-  protected scrollTo(sectionId: string): void {
-    this.lenisService.scrollTo(`#${sectionId}`, { offset: -80 });
+  protected scrollTo(event: Event, sectionId: string): void {
+    event.preventDefault();
+    // Try Lenis smooth scroll first; fall back to native
+    if (this.lenisService.instance) {
+      this.lenisService.scrollTo(`#${sectionId}`, { offset: -80 });
+    } else {
+      document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+    }
   }
 
   // ---------------------------------------------------------------------------

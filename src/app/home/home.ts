@@ -146,9 +146,11 @@ export class Home implements AfterViewInit, OnDestroy {
     const children = this.heroTitle.nativeElement.children;
     if (!children.length) return;
 
-    gsap.from(children, {
-      y: 50,
-      opacity: 0,
+    // Use set + to instead of from for robustness with SSR hydration
+    gsap.set(children, { y: 50, opacity: 0 });
+    gsap.to(children, {
+      y: 0,
+      opacity: 1,
       stagger: 0.15,
       duration: 0.8,
       ease: 'power3.out',
@@ -170,10 +172,12 @@ export class Home implements AfterViewInit, OnDestroy {
       el.appendChild(span);
     }
 
-    this.subtitleTween = gsap.from(el.children, {
-      opacity: 0,
-      y: 20,
-      rotateX: -90,
+    // Use set + to instead of from for robustness with SSR hydration
+    gsap.set(el.children, { opacity: 0, y: 20, rotateX: -90 });
+    this.subtitleTween = gsap.to(el.children, {
+      opacity: 1,
+      y: 0,
+      rotateX: 0,
       stagger: 0.02,
       duration: 0.6,
       ease: 'back.out(1.7)',
@@ -184,9 +188,11 @@ export class Home implements AfterViewInit, OnDestroy {
   // ─── Description (p) — fade + slide up ────────────────────────────
 
   private animateDescription(): void {
-    this.descriptionTween = gsap.from(this.heroDescription.nativeElement, {
-      y: 20,
-      opacity: 0,
+    // Use set + to instead of from for robustness with SSR hydration
+    gsap.set(this.heroDescription.nativeElement, { y: 20, opacity: 0 });
+    this.descriptionTween = gsap.to(this.heroDescription.nativeElement, {
+      y: 0,
+      opacity: 1,
       duration: 0.8,
       ease: 'power3.out',
       delay: 0.35,
@@ -197,9 +203,11 @@ export class Home implements AfterViewInit, OnDestroy {
 
   private animateCtaButtons(): void {
     this.ctaButtons.forEach((btn, i) => {
-      const tween = gsap.from(btn.nativeElement, {
-        y: 30,
-        opacity: 0,
+      // Use set + to instead of from for robustness with SSR hydration
+      gsap.set(btn.nativeElement, { y: 30, opacity: 0 });
+      const tween = gsap.to(btn.nativeElement, {
+        y: 0,
+        opacity: 1,
         duration: 0.6,
         ease: 'power3.out',
         delay: 0.55 + i * 0.15,

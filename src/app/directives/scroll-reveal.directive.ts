@@ -69,6 +69,7 @@ export class ScrollRevealDirective implements AfterViewInit, OnDestroy {
         start: 'top 85%',
         end: 'top 30%',
         toggleActions: 'play none none reverse',
+        scroller: document.body, // Required: Lenis uses body as scroller proxy
       },
     });
 

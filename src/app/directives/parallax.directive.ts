@@ -66,6 +66,7 @@ export class ParallaxDirective implements AfterViewInit, OnDestroy {
             start: 'top bottom',
             end: 'bottom top',
             scrub: true,
+            scroller: document.body, // Required: Lenis uses body as scroller proxy
           },
         },
       );

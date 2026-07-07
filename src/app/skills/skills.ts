@@ -80,6 +80,7 @@ export class Skills implements AfterViewInit, OnDestroy {
           trigger: this.skillsSection.nativeElement,
           start: 'top 75%',
           toggleActions: 'play none none none',
+          scroller: document.body, // Required: Lenis uses body as scroller proxy
         },
       });
       this.barTweens.push(tween);
