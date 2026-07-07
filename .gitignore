@@ -48,3 +48,6 @@ Thumbs.db
 /playwright-report/
 /test-results/
 /e2e/.auth/
+
+# Environment — keep tokens out of git
+src/environments/environment.development.ts
