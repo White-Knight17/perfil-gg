@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { injectQuery } from '@tanstack/angular-query-experimental';
+import { firstValueFrom } from 'rxjs';
 import { environment } from '../environments/environment';
 
 export interface GitHubRepository {
@@ -15,36 +16,46 @@ export interface GitHubRepository {
   fork: boolean;
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+const GITHUB_USERNAME = 'White-Knight17';
+const REPOS_URL = `https://api.github.com/users/${GITHUB_USERNAME}/repos`;
+const PROFILE_URL = `https://api.github.com/users/${GITHUB_USERNAME}`;
+
+function authHeaders() {
+  const token = environment.githubToken;
+  if (!token) return {};
+  return { headers: new HttpHeaders({ Authorization: `Bearer ${token}` }) };
+}
+
+@Injectable({ providedIn: 'root' })
 export class GithubService {
-  private readonly GITHUB_USERNAME = 'White-Knight17';
-  private readonly GITHUB_API_URL = `https://api.github.com/users/${this.GITHUB_USERNAME}/repos`;
+  private readonly http = inject(HttpClient);
 
-  constructor(private http: HttpClient) {}
-
-  private get headers(): { headers?: HttpHeaders } {
-    const token = environment.githubToken;
-    if (!token) return {};
-    return { headers: new HttpHeaders({ Authorization: `Bearer ${token}` }) };
+  getUserRepositories(): Promise<GitHubRepository[]> {
+    return firstValueFrom(this.http.get<GitHubRepository[]>(REPOS_URL, {
+      ...authHeaders(),
+      params: { sort: 'updated', direction: 'desc', per_page: '6' },
+    }));
   }
 
-  getUserRepositories(): Observable<GitHubRepository[]> {
-    return this.http.get<GitHubRepository[]>(this.GITHUB_API_URL, {
-      ...this.headers,
-      params: {
-        sort: 'updated',
-        direction: 'desc',
-        per_page: '6',
-      },
-    });
+  getUserProfile(): Promise<any> {
+    return firstValueFrom(this.http.get<any>(PROFILE_URL, authHeaders()));
   }
+}
 
-  getUserProfile(): Observable<any> {
-    return this.http.get<any>(
-      `https://api.github.com/users/${this.GITHUB_USERNAME}`,
-      this.headers,
-    );
-  }
+/** TanStack Query hook — fetches and caches GitHub repos */
+export function useGithubReposQuery() {
+  const service = inject(GithubService);
+  return injectQuery(() => ({
+    queryKey: ['github', 'repos'],
+    queryFn: () => service.getUserRepositories(),
+  }));
+}
+
+/** TanStack Query hook — fetches and caches GitHub profile */
+export function useGithubProfileQuery() {
+  const service = inject(GithubService);
+  return injectQuery(() => ({
+    queryKey: ['github', 'profile'],
+    queryFn: () => service.getUserProfile(),
+  }));
 }

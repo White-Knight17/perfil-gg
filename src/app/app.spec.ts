@@ -1,19 +1,15 @@
 import { TestBed } from '@angular/core/testing';
 import { App } from './app';
+import { provideQueryClient, QueryClient } from '@tanstack/angular-query-experimental';
 
 describe('App', () => {
   beforeAll(() => {
-    // Mock matchMedia for jsdom test environment
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
       value: (query: string) => ({
-        matches: false,
-        media: query,
-        onchange: null,
-        addListener: () => undefined,
-        removeListener: () => undefined,
-        addEventListener: () => undefined,
-        removeEventListener: () => undefined,
+        matches: false, media: query, onchange: null,
+        addListener: () => undefined, removeListener: () => undefined,
+        addEventListener: () => undefined, removeEventListener: () => undefined,
         dispatchEvent: () => false,
       }),
     });
@@ -22,12 +18,12 @@ describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
+      providers: [provideQueryClient(new QueryClient({ defaultOptions: { queries: { retry: false } } }))],
     }).compileComponents();
   });
 
   it('should create the app', () => {
     const fixture = TestBed.createComponent(App);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
+    expect(fixture.componentInstance).toBeTruthy();
   });
 });

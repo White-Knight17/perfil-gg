@@ -62,34 +62,34 @@
 
       <!-- Formulario -->
       @if (!showSuccess && !showError) {
-        <form (ngSubmit)="onSubmit()" class="space-y-6">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
           <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <!-- Nombre -->
             <div class="relative">
               <label for="name" class="block text-sm font-medium text-gray-300 mb-1">Nombre</label>
               <input
-                type="text"
-                id="name"
-                name="name"
-                [(ngModel)]="contactForm.name"
-                required
-                placeholder="Tu nombre"
-                class="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                type="text" id="name" formControlName="name" placeholder="Tu nombre"
+                class="w-full px-4 py-3 bg-gray-800/50 border rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                [class.border-red-500]="getError('name')"
+                [class.border-gray-700]="!getError('name')"
               />
+              @if (getError('name')) {
+                <p class="text-red-400 text-sm mt-1">{{ getError('name') }}</p>
+              }
             </div>
 
             <!-- Email -->
             <div class="relative">
               <label for="email" class="block text-sm font-medium text-gray-300 mb-1">Email</label>
               <input
-                type="email"
-                id="email"
-                name="email"
-                [(ngModel)]="contactForm.email"
-                required
-                placeholder="tu@email.com"
-                class="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                type="email" id="email" formControlName="email" placeholder="tu@email.com"
+                class="w-full px-4 py-3 bg-gray-800/50 border rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+                [class.border-red-500]="getError('email')"
+                [class.border-gray-700]="!getError('email')"
               />
+              @if (getError('email')) {
+                <p class="text-red-400 text-sm mt-1">{{ getError('email') }}</p>
+              }
             </div>
           </div>
 
@@ -97,36 +97,33 @@
           <div class="relative">
             <label for="subject" class="block text-sm font-medium text-gray-300 mb-1">Asunto</label>
             <input
-              type="text"
-              id="subject"
-              name="subject"
-              [(ngModel)]="contactForm.subject"
-              required
-              placeholder="Sobre qué quieres hablar"
-              class="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+              type="text" id="subject" formControlName="subject" placeholder="Sobre qué quieres hablar"
+              class="w-full px-4 py-3 bg-gray-800/50 border rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+              [class.border-red-500]="getError('subject')"
+              [class.border-gray-700]="!getError('subject')"
             />
+            @if (getError('subject')) {
+              <p class="text-red-400 text-sm mt-1">{{ getError('subject') }}</p>
+            }
           </div>
 
           <!-- Mensaje -->
           <div class="relative">
-            <label for="message" class="block text-sm font-medium text-gray-300 mb-1"
-              >Mensaje</label
-            >
+            <label for="message" class="block text-sm font-medium text-gray-300 mb-1">Mensaje</label>
             <textarea
-              id="message"
-              name="message"
-              rows="5"
-              [(ngModel)]="contactForm.message"
-              required
-              placeholder="Cuéntame más sobre tu proyecto o consulta"
-              class="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all resize-none"
+              id="message" rows="5" formControlName="message" placeholder="Cuéntame más sobre tu proyecto o consulta"
+              class="w-full px-4 py-3 bg-gray-800/50 border rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all resize-none"
+              [class.border-red-500]="getError('message')"
+              [class.border-gray-700]="!getError('message')"
             ></textarea>
+            @if (getError('message')) {
+              <p class="text-red-400 text-sm mt-1">{{ getError('message') }}</p>
+            }
           </div>
 
           <div class="flex justify-end">
             <button
-              type="submit"
-              [disabled]="isSubmitting"
+              type="submit" [disabled]="isSubmitting || form.invalid"
               class="cta-btn group relative px-8 py-3 rounded-xl font-bold overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <span

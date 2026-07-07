@@ -3,26 +3,26 @@
     class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-950/30 via-transparent to-transparent"
   ></div>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-    @if (loading) {
+    @if (isLoading()) {
     <div class="text-center py-12">
       <div
         class="animate-spin rounded-full h-10 w-10 border-2 border-indigo-500 border-t-transparent mx-auto"
       ></div>
       <p class="mt-4 text-gray-400">Cargando tus proyectos desde GitHub...</p>
     </div>
-    } @else if (error) {
+    } @else if (isError()) {
     <div class="text-center py-12 bg-red-950/30 rounded-lg p-6 border border-red-800/50">
       <h3 class="text-red-400 font-bold mb-2">Error al cargar proyectos</h3>
-      <p class="text-red-300/70">{{ error }}</p>
+      <p class="text-red-300/70">{{ errorMessage() }}</p>
       <button
         mat-button
         class="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-6 py-2 rounded-lg"
-        (click)="loadGitHubProjects()"
+        (click)="retry()"
       >
         Intentar nuevamente
       </button>
     </div>
-    } @else if (projects.length === 0) {
+    } @else if (isEmpty()) {
     <div class="text-center py-12">
       <p class="text-gray-400">No se encontraron proyectos públicos en tu perfil de GitHub.</p>
     </div>
@@ -32,7 +32,7 @@
       Repositorios públicos obtenidos directamente desde GitHub
     </p>
     <div appStaggerList class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-      @for (project of projects; track project.name) {
+      @for (project of projects(); track project.name) {
       <mat-card
         appTilt
         class="project-card-hover flex flex-col h-full bg-gray-900 rounded-xl overflow-hidden transition-all duration-300"
