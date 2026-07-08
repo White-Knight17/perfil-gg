@@ -53,18 +53,23 @@ export class Showcase implements AfterViewInit, OnDestroy {
     // Calculate total scroll distance
     const totalWidth = track.scrollWidth - window.innerWidth;
 
+    // Use quickTo for smooth interpolation instead of instant gsap.set()
+    const xTo = gsap.quickTo(track, 'x', {
+      duration: 0.6,
+      ease: 'power2.out',
+    });
+
     this.scrollTrigger = ScrollTrigger.create({
       trigger: section,
       start: 'top top',
       end: () => `+=${totalWidth}`,
       pin: true,
-      scrub: 1,
-      anticipatePin: 1,
+      scrub: 2,
+      anticipatePin: 0,
       scroller: document.body, // Required: Lenis uses body as scroller proxy
       onUpdate: (self) => {
-        // Move track horizontally
-        gsap.set(track, { x: -self.progress * totalWidth });
-      }
+        xTo(-self.progress * totalWidth);
+      },
     });
   }
 
