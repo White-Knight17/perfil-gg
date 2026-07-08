@@ -10,7 +10,6 @@ import {
   QueryList,
   NgZone,
   HostListener,
-  effect,
   signal,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
@@ -57,8 +56,8 @@ export class App implements AfterViewInit, OnDestroy {
   private readonly isBrowser: boolean;
   private initialized = false;
   private safetyTimer?: ReturnType<typeof setTimeout>;
+  private pollTimer?: ReturnType<typeof setInterval>;
   private intersectionObserver?: IntersectionObserver;
-  private preloaderEffect?: ReturnType<typeof effect>;
 
   /** Section IDs to spy on, in visual order */
   private readonly sectionIds = ['home', 'projects', 'skills', 'contact'];
@@ -95,22 +94,25 @@ export class App implements AfterViewInit, OnDestroy {
     if (this.initialized) return;
     this.initialized = true;
 
-    // Watch preloader completion reactively
-    this.preloaderEffect = effect(() => {
+    // Poll preloader completion — effect() doesn't fire reliably when
+    // PreloaderService.complete() is called from GSAP callbacks (outside NgZone).
+    this.pollTimer = setInterval(() => {
       if (this.preloaderService.done()) {
+        clearInterval(this.pollTimer);
         this.onPreloaderDone();
       }
-    });
+    }, 50);
 
     // Safety timeout: force init after 5s even if preloader never completes
     this.safetyTimer = setTimeout(() => {
+      if (this.pollTimer) clearInterval(this.pollTimer);
       this.onPreloaderDone();
     }, 5000);
   }
 
   ngOnDestroy(): void {
     if (this.safetyTimer) clearTimeout(this.safetyTimer);
-    this.preloaderEffect?.destroy();
+    if (this.pollTimer) clearInterval(this.pollTimer);
     this.intersectionObserver?.disconnect();
 
     // Mobile menu cleanup
