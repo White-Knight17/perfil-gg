@@ -1,4 +1,4 @@
-/* Preloader transition state — hidden once complete */
+/* Preloader — ensure the host element does not interfere with layout */
 :host {
-  display: contents;
+  display: block;
 }

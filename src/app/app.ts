@@ -15,6 +15,7 @@ import {
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Home } from './home/home';
 import { Projects } from './projects/projects';
 import { Skills } from './skills/skills';
@@ -278,10 +279,11 @@ export class App implements AfterViewInit, OnDestroy {
     // Render main content — children will create ScrollTriggers after this
     this.preloaderDone.set(true);
 
-    // Init scroll spy after Angular renders the section DOM elements
+    // Refresh ScrollTrigger positions and init scroll spy after Angular renders the DOM
     setTimeout(() => {
+      ScrollTrigger.refresh();
       this.initScrollSpy();
-    }, 100);
+    }, 150);
   }
 
   /**
