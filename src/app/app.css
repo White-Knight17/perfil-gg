@@ -1,3 +1,16 @@
+/* ── Main content visibility ── */
+
+.site-content {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.site-content-visible {
+  visibility: visible;
+  opacity: 1;
+}
+
 /* Active nav link — highlighted when its section is in view */
 .nav-link.active {
   color: white;

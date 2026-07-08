@@ -1,9 +1,8 @@
 <!-- Preloader — full-screen overlay on top of everything -->
 <app-preloader />
 
-<!-- Main site content — rendered only after preloader completes -->
-@if (preloaderDone()) {
-<div class="site-content">
+<!-- Main site content — hidden until preloader completes -->
+<div class="site-content" [class.site-content-visible]="preloaderDone()">
   <!-- Skip to content link -->
   <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
 
@@ -167,7 +166,6 @@
     </div>
   </footer>
 </div>
-}
 
 <style>
   .skip-link {

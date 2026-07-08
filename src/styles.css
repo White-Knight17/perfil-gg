@@ -15,10 +15,10 @@
 }
 
 /* Base styles - Dark theme
-   Use `background` shorthand to override any background set by mat.theme()
-   (which applies `background: var(--mat-sys-surface)` on <html> in Azure palette). */
+   Use `background` shorthand with !important to override any background set by
+   mat.theme() (which applies `background: var(--mat-sys-surface)` on <html>). */
 html {
-  background: #030712;
+  background: #030712 !important;
   height: 100%;
 }
 
@@ -30,7 +30,7 @@ body {
     'Segoe UI',
     Roboto,
     sans-serif;
-  background: #030712;
+  background: #030712 !important;
   color: var(--text-primary);
 }
 

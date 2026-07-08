@@ -273,14 +273,18 @@ export class App implements AfterViewInit, OnDestroy {
       this.safetyTimer = undefined;
     }
 
-    // Init Lenis BEFORE rendering content so ScrollTriggers use the scrollerProxy
-    this.lenisService.init();
-
-    // Render main content — children will create ScrollTriggers after this
+    // Show content FIRST — always, even if Lenis fails
     this.preloaderDone.set(true);
 
-    // Refresh ScrollTrigger positions and init scroll spy after Angular renders the DOM
+    // Init Lenis with a small delay so Angular renders the content first.
+    // Wrapped in try-catch because Lenis can throw if DOM is in unexpected state.
     setTimeout(() => {
+      try {
+        this.lenisService.init();
+      } catch (e) {
+        console.error('Lenis initialization failed:', e);
+      }
+
       ScrollTrigger.refresh();
       this.initScrollSpy();
     }, 150);
