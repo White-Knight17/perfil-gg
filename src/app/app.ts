@@ -11,6 +11,7 @@ import {
   NgZone,
   HostListener,
   effect,
+  signal,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { gsap } from 'gsap';
@@ -48,6 +49,9 @@ export class App implements AfterViewInit, OnDestroy {
 
   /** Mobile hamburger menu open state */
   protected mobileMenuOpen = false;
+
+  /** Preloader completion state — gates .site-content rendering */
+  protected preloaderDone = signal(false);
 
   private readonly isBrowser: boolean;
   private initialized = false;
@@ -268,9 +272,14 @@ export class App implements AfterViewInit, OnDestroy {
       this.safetyTimer = undefined;
     }
 
-    // Initialize Lenis and scroll spy after preloader
+    // Init Lenis BEFORE rendering content so ScrollTriggers use the scrollerProxy
+    this.lenisService.init();
+
+    // Render main content — children will create ScrollTriggers after this
+    this.preloaderDone.set(true);
+
+    // Init scroll spy after Angular renders the section DOM elements
     setTimeout(() => {
-      this.lenisService.init();
       this.initScrollSpy();
     }, 100);
   }

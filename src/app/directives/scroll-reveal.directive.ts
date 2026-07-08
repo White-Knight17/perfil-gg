@@ -58,9 +58,14 @@ export class ScrollRevealDirective implements AfterViewInit, OnDestroy {
       right: { x: -this.distance() },
     };
 
-    this.animation = gsap.from(this.el.nativeElement, {
+    // Use set + to instead of from for robustness with SSR hydration
+    gsap.set(this.el.nativeElement, { ...transforms[this.direction()], opacity: 0 });
+
+    this.animation = gsap.to(this.el.nativeElement, {
       ...transforms[this.direction()],
-      opacity: 0,
+      x: 0,
+      y: 0,
+      opacity: 1,
       duration: this.duration(),
       delay: this.delay(),
       ease: 'power3.out',

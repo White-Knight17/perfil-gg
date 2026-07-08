@@ -14,6 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { isPlatformBrowser } from '@angular/common';
 import { gsap } from 'gsap';
 import { PreloaderService } from '../services/preloader.service';
+import { LenisService } from '../services/lenis.service';
 
 /**
  * Home (Hero) component — refactored with @ViewChild instead of global CSS
@@ -71,6 +72,7 @@ export class Home implements AfterViewInit, OnDestroy {
   constructor(
     @Inject(PLATFORM_ID) platformId: object,
     private readonly preloaderService: PreloaderService,
+    private readonly lenisService: LenisService,
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
     this.isTouchDevice = this.isBrowser && 'ontouchstart' in window;
@@ -102,9 +104,11 @@ export class Home implements AfterViewInit, OnDestroy {
   // ─── Public ───────────────────────────────────────────────────────
 
   scrollToSection(sectionId: string): void {
-    const el = document.getElementById(sectionId);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
+    // Use Lenis smooth scroll when available, fall back to native
+    if (this.lenisService.instance) {
+      this.lenisService.scrollTo(`#${sectionId}`, { offset: -80 });
+    } else {
+      document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
     }
   }
 

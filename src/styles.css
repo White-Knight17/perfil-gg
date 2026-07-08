@@ -16,10 +16,6 @@
 
 /* Base styles - Dark theme */
 html {
-  scroll-behavior: smooth;
-}
-
-html {
   background-color: #030712;
 }
 
