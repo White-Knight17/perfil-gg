@@ -3,11 +3,9 @@ import {
   ElementRef,
   inject,
   input,
-  AfterViewInit,
   OnDestroy,
-  PLATFORM_ID,
+  afterNextRender,
 } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { AnimationConfigService } from '../services/animation-config.service';
@@ -27,9 +25,8 @@ import { AnimationConfigService } from '../services/animation-config.service';
   selector: '[appCounterAnimation]',
   standalone: true,
 })
-export class CounterAnimationDirective implements AfterViewInit, OnDestroy {
+export class CounterAnimationDirective implements OnDestroy {
   private readonly el = inject(ElementRef);
-  private readonly platformId = inject(PLATFORM_ID);
   private readonly animationConfig = inject(AnimationConfigService);
 
   /** Animation duration in seconds */
@@ -44,10 +41,9 @@ export class CounterAnimationDirective implements AfterViewInit, OnDestroy {
   private animation?: gsap.core.Tween;
   private scrollTriggerInstance?: ScrollTrigger;
 
-  ngAfterViewInit(): void {
-    if (!isPlatformBrowser(this.platformId)) return;
-
-    const targetValue = parseInt(this.el.nativeElement.textContent, 10);
+  constructor() {
+    afterNextRender(() => {
+      const targetValue = parseInt(this.el.nativeElement.textContent, 10);
     if (isNaN(targetValue)) return;
 
     // Set initial display to 0 (with prefix/suffix)
@@ -77,6 +73,7 @@ export class CounterAnimationDirective implements AfterViewInit, OnDestroy {
     });
 
     this.scrollTriggerInstance = this.animation.scrollTrigger as ScrollTrigger;
+    });
   }
 
   ngOnDestroy(): void {

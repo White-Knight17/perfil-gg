@@ -3,12 +3,10 @@ import {
   ElementRef,
   inject,
   input,
-  AfterViewInit,
   OnDestroy,
-  PLATFORM_ID,
   NgZone,
+  afterNextRender,
 } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
 import { gsap } from 'gsap';
 
 /**
@@ -32,9 +30,8 @@ import { gsap } from 'gsap';
   selector: '[appTilt]',
   standalone: true,
 })
-export class TiltDirective implements AfterViewInit, OnDestroy {
+export class TiltDirective implements OnDestroy {
   private readonly el = inject(ElementRef);
-  private readonly platformId = inject(PLATFORM_ID);
   private readonly ngZone = inject(NgZone);
 
   /** Max rotation in degrees (default: 10) */
@@ -50,7 +47,6 @@ export class TiltDirective implements AfterViewInit, OnDestroy {
   readonly speed = input(500);
 
   private element!: HTMLElement;
-  private isBrowser = false;
 
   /** Bound handlers — stored for cleanup */
   private boundMouseMove!: (e: MouseEvent) => void;
@@ -60,14 +56,13 @@ export class TiltDirective implements AfterViewInit, OnDestroy {
   /** GSAP tween for mouse-leave return animation */
   private leaveAnimation?: gsap.core.Tween;
 
-  ngAfterViewInit(): void {
-    if (!isPlatformBrowser(this.platformId)) return;
-    this.isBrowser = true;
-    this.element = this.el.nativeElement;
+  constructor() {
+    afterNextRender(() => {
+      this.element = this.el.nativeElement;
 
-    // Run OUTSIDE NgZone for 60fps performance
-    this.ngZone.runOutsideAngular(() => {
-      this.initTilt();
+      this.ngZone.runOutsideAngular(() => {
+        this.initTilt();
+      });
     });
   }
 
@@ -177,8 +172,7 @@ export class TiltDirective implements AfterViewInit, OnDestroy {
   // ---------------------------------------------------------------------------
 
   ngOnDestroy(): void {
-    if (!this.isBrowser) return;
-
+    if (!this.element) return; // afterNextRender hasn't fired yet (SSR/prerender)
     this.element.removeEventListener('mousemove', this.boundMouseMove);
     this.element.removeEventListener('mouseleave', this.boundMouseLeave);
     window.removeEventListener('deviceorientation', this.boundOrientation);

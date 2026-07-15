@@ -1,5 +1,4 @@
-import { Component, AfterViewInit, OnDestroy, Inject, PLATFORM_ID, ElementRef, ViewChild } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { Component, OnDestroy, ElementRef, ViewChild, afterNextRender } from '@angular/core';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { BrowserMockup } from '../components/browser-mockup/browser-mockup';
@@ -20,11 +19,10 @@ interface ShowcaseProject {
   templateUrl: './showcase.html',
   styleUrl: './showcase.css'
 })
-export class Showcase implements AfterViewInit, OnDestroy {
+export class Showcase implements OnDestroy {
   @ViewChild('showcaseSection') showcaseSection!: ElementRef<HTMLElement>;
   @ViewChild('showcaseTrack') showcaseTrack!: ElementRef<HTMLElement>;
 
-  private isBrowser: boolean;
   private scrollTrigger?: ScrollTrigger;
 
   projects: ShowcaseProject[] = [
@@ -38,38 +36,32 @@ export class Showcase implements AfterViewInit, OnDestroy {
     }
   ];
 
-  constructor(@Inject(PLATFORM_ID) platformId: object) {
-    this.isBrowser = isPlatformBrowser(platformId);
-  }
+  constructor() {
+    afterNextRender(() => {
+      gsap.registerPlugin(ScrollTrigger);
 
-  ngAfterViewInit(): void {
-    if (!this.isBrowser) return;
+      const track = this.showcaseTrack.nativeElement;
+      const section = this.showcaseSection.nativeElement;
 
-    gsap.registerPlugin(ScrollTrigger);
+      const totalWidth = track.scrollWidth - window.innerWidth;
 
-    const track = this.showcaseTrack.nativeElement;
-    const section = this.showcaseSection.nativeElement;
+      const xTo = gsap.quickTo(track, 'x', {
+        duration: 0.6,
+        ease: 'power2.out',
+      });
 
-    // Calculate total scroll distance
-    const totalWidth = track.scrollWidth - window.innerWidth;
-
-    // Use quickTo for smooth interpolation instead of instant gsap.set()
-    const xTo = gsap.quickTo(track, 'x', {
-      duration: 0.6,
-      ease: 'power2.out',
-    });
-
-    this.scrollTrigger = ScrollTrigger.create({
-      trigger: section,
-      start: 'top top',
-      end: () => `+=${totalWidth}`,
-      pin: true,
-      scrub: 2,
-      anticipatePin: 0,
-      scroller: document.body, // Required: Lenis uses body as scroller proxy
-      onUpdate: (self) => {
-        xTo(-self.progress * totalWidth);
-      },
+      this.scrollTrigger = ScrollTrigger.create({
+        trigger: section,
+        start: 'top top',
+        end: () => `+=${totalWidth}`,
+        pin: true,
+        scrub: 2,
+        anticipatePin: 0,
+        scroller: document.body,
+        onUpdate: (self) => {
+          xTo(-self.progress * totalWidth);
+        },
+      });
     });
   }
 

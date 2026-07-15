@@ -3,11 +3,9 @@ import {
   ElementRef,
   inject,
   input,
-  AfterViewInit,
   OnDestroy,
-  PLATFORM_ID,
+  afterNextRender,
 } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { AnimationConfigService } from '../services/animation-config.service';
@@ -27,9 +25,8 @@ import { AnimationConfigService } from '../services/animation-config.service';
   selector: '[appTextReveal]',
   standalone: true,
 })
-export class TextRevealDirective implements AfterViewInit, OnDestroy {
+export class TextRevealDirective implements OnDestroy {
   private readonly el = inject(ElementRef);
-  private readonly platformId = inject(PLATFORM_ID);
   private readonly animationConfig = inject(AnimationConfigService);
 
   /** Seconds between each character animation */
@@ -40,10 +37,9 @@ export class TextRevealDirective implements AfterViewInit, OnDestroy {
 
   private animation?: gsap.core.Tween;
 
-  ngAfterViewInit(): void {
-    if (!isPlatformBrowser(this.platformId)) return;
-
-    if (this.animationConfig.reducedMotion()) {
+  constructor() {
+    afterNextRender(() => {
+      if (this.animationConfig.reducedMotion()) {
       // Ensure text is visible when animations are disabled
       this.el.nativeElement.style.opacity = '1';
       return;
@@ -74,6 +70,7 @@ export class TextRevealDirective implements AfterViewInit, OnDestroy {
         start: 'top 90%',
         scroller: document.body, // Required: Lenis uses body as scroller proxy
       },
+      });
     });
   }
 

@@ -1,13 +1,10 @@
 import {
   Component,
-  AfterViewInit,
   OnDestroy,
-  Inject,
-  PLATFORM_ID,
   ElementRef,
   ViewChild,
+  afterNextRender,
 } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
 import { gsap } from 'gsap';
 import { PreloaderService } from '../services/preloader.service';
 
@@ -31,14 +28,13 @@ import { PreloaderService } from '../services/preloader.service';
   templateUrl: './preloader.html',
   styleUrl: './preloader.css',
 })
-export class Preloader implements AfterViewInit, OnDestroy {
+export class Preloader implements OnDestroy {
   @ViewChild('preloaderRef') preloaderRef!: ElementRef<HTMLDivElement>;
   @ViewChild('avatarWrapperRef') avatarWrapperRef!: ElementRef<HTMLDivElement>;
   @ViewChild('pulseRef') pulseRef!: ElementRef<HTMLDivElement>;
   @ViewChild('nameRef') nameRef!: ElementRef<HTMLHeadingElement>;
   @ViewChild('titleRef') titleRef!: ElementRef<HTMLParagraphElement>;
 
-  private readonly isBrowser: boolean;
   private introTimeline?: gsap.core.Timeline;
   private outroTimeline?: gsap.core.Timeline;
   private pulseTween?: gsap.core.Tween;
@@ -46,16 +42,12 @@ export class Preloader implements AfterViewInit, OnDestroy {
   private startTime = 0;
 
   constructor(
-    @Inject(PLATFORM_ID) platformId: object,
     private readonly preloaderService: PreloaderService,
   ) {
-    this.isBrowser = isPlatformBrowser(platformId);
-  }
-
-  ngAfterViewInit(): void {
-    if (!this.isBrowser) return;
-    this.startTime = performance.now();
-    this.animateIntro();
+    afterNextRender(() => {
+      this.startTime = performance.now();
+      this.animateIntro();
+    });
   }
 
   ngOnDestroy(): void {

@@ -3,12 +3,10 @@ import {
   ElementRef,
   inject,
   input,
-  AfterViewInit,
   OnDestroy,
-  PLATFORM_ID,
   NgZone,
+  afterNextRender,
 } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { AnimationConfigService } from '../services/animation-config.service';
@@ -31,9 +29,8 @@ import { AnimationConfigService } from '../services/animation-config.service';
   selector: '[appParallax]',
   standalone: true,
 })
-export class ParallaxDirective implements AfterViewInit, OnDestroy {
+export class ParallaxDirective implements OnDestroy {
   private readonly el = inject(ElementRef);
-  private readonly platformId = inject(PLATFORM_ID);
   private readonly ngZone = inject(NgZone);
   private readonly animationConfig = inject(AnimationConfigService);
 
@@ -45,31 +42,32 @@ export class ParallaxDirective implements AfterViewInit, OnDestroy {
 
   private animation?: gsap.core.Tween;
 
-  ngAfterViewInit(): void {
-    if (!isPlatformBrowser(this.platformId)) return;
-    if (this.animationConfig.reducedMotion()) return;
+  constructor() {
+    afterNextRender(() => {
+      if (this.animationConfig.reducedMotion()) return;
 
-    this.ngZone.runOutsideAngular(() => {
-      const yValue =
-        this.direction() === 'up'
-          ? this.speed() * 100
-          : -(this.speed() * 100);
+      this.ngZone.runOutsideAngular(() => {
+        const yValue =
+          this.direction() === 'up'
+            ? this.speed() * 100
+            : -(this.speed() * 100);
 
-      this.animation = gsap.fromTo(
-        this.el.nativeElement,
-        { y: 0 },
-        {
-          y: yValue,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: this.el.nativeElement,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: true,
-            scroller: document.body, // Required: Lenis uses body as scroller proxy
+        this.animation = gsap.fromTo(
+          this.el.nativeElement,
+          { y: 0 },
+          {
+            y: yValue,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: this.el.nativeElement,
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: true,
+              scroller: document.body,
+            },
           },
-        },
-      );
+        );
+      });
     });
   }
 

@@ -3,11 +3,9 @@ import {
   ElementRef,
   inject,
   input,
-  AfterViewInit,
   OnDestroy,
-  PLATFORM_ID,
+  afterNextRender,
 } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { AnimationConfigService } from '../services/animation-config.service';
@@ -30,9 +28,8 @@ export type StaggerAnimation = 'fade' | 'slide-up' | 'slide-left';
   selector: '[appStaggerList]',
   standalone: true,
 })
-export class StaggerListDirective implements AfterViewInit, OnDestroy {
+export class StaggerListDirective implements OnDestroy {
   private readonly el = inject(ElementRef);
-  private readonly platformId = inject(PLATFORM_ID);
   private readonly animationConfig = inject(AnimationConfigService);
 
   /** Seconds between each child animation */
@@ -43,10 +40,9 @@ export class StaggerListDirective implements AfterViewInit, OnDestroy {
 
   private timeline?: gsap.core.Timeline;
 
-  ngAfterViewInit(): void {
-    if (!isPlatformBrowser(this.platformId)) return;
-
-    if (this.animationConfig.reducedMotion()) {
+  constructor() {
+    afterNextRender(() => {
+      if (this.animationConfig.reducedMotion()) {
       // Ensure children are visible when animations are disabled
       Array.from(this.el.nativeElement.children as HTMLCollectionOf<HTMLElement>).forEach(
         (child) => {
@@ -80,6 +76,7 @@ export class StaggerListDirective implements AfterViewInit, OnDestroy {
       y: 0,
       x: 0,
       stagger: this.stagger(),
+    });
     });
   }
 

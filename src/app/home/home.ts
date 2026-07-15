@@ -1,17 +1,14 @@
 import {
   Component,
-  AfterViewInit,
   OnDestroy,
-  Inject,
-  PLATFORM_ID,
   ElementRef,
   ViewChild,
   ViewChildren,
   QueryList,
+  afterNextRender,
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { isPlatformBrowser } from '@angular/common';
 import { gsap } from 'gsap';
 import { PreloaderService } from '../services/preloader.service';
 import { LenisService } from '../services/lenis.service';
@@ -40,7 +37,7 @@ import { LenisService } from '../services/lenis.service';
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
-export class Home implements AfterViewInit, OnDestroy {
+export class Home implements OnDestroy {
   // ─── View Refs ─────────────────────────────────────────────────────
 
   @ViewChild('heroTitle') heroTitle!: ElementRef<HTMLHeadingElement>;
@@ -55,8 +52,7 @@ export class Home implements AfterViewInit, OnDestroy {
 
   // ─── State ─────────────────────────────────────────────────────────
 
-  private readonly isBrowser: boolean;
-  private readonly isTouchDevice: boolean;
+  private isTouchDevice = false; // set in afterNextRender
   private heroStarted = false;
 
   // GSAP instances for cleanup
@@ -70,19 +66,15 @@ export class Home implements AfterViewInit, OnDestroy {
   private preloaderSub?: ReturnType<typeof setTimeout>;
 
   constructor(
-    @Inject(PLATFORM_ID) platformId: object,
     private readonly preloaderService: PreloaderService,
     private readonly lenisService: LenisService,
   ) {
-    this.isBrowser = isPlatformBrowser(platformId);
-    this.isTouchDevice = this.isBrowser && 'ontouchstart' in window;
-  }
+    afterNextRender(() => {
+      this.isTouchDevice = 'ontouchstart' in window;
 
-  ngAfterViewInit(): void {
-    if (!this.isBrowser) return;
-
-    // Wait for preloader completion signal
-    this.preloaderSub = setTimeout(() => this.checkPreloader(), 100);
+      // Wait for preloader completion signal
+      this.preloaderSub = setTimeout(() => this.checkPreloader(), 100);
+    });
   }
 
   ngOnDestroy(): void {

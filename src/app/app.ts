@@ -1,9 +1,6 @@
 import {
   Component,
-  AfterViewInit,
   OnDestroy,
-  Inject,
-  PLATFORM_ID,
   ViewChild,
   ViewChildren,
   ElementRef,
@@ -11,8 +8,8 @@ import {
   NgZone,
   HostListener,
   signal,
+  afterNextRender,
 } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Home } from './home/home';
@@ -43,7 +40,7 @@ import { PreloaderService } from './services/preloader.service';
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
-export class App implements AfterViewInit, OnDestroy {
+export class App implements OnDestroy {
   /** Currently visible section ID for nav highlight */
   protected activeSection = 'home';
 
@@ -53,7 +50,6 @@ export class App implements AfterViewInit, OnDestroy {
   /** Preloader completion state — gates .site-content rendering */
   protected preloaderDone = signal(false);
 
-  private readonly isBrowser: boolean;
   private initialized = false;
   private safetyTimer?: ReturnType<typeof setTimeout>;
   private pollTimer?: ReturnType<typeof setInterval>;
@@ -81,33 +77,29 @@ export class App implements AfterViewInit, OnDestroy {
   private mobileMenuTimeline?: gsap.core.Timeline;
 
   constructor(
-    @Inject(PLATFORM_ID) private readonly platformId: object,
     private readonly lenisService: LenisService,
     private readonly preloaderService: PreloaderService,
     private readonly ngZone: NgZone,
   ) {
-    this.isBrowser = isPlatformBrowser(this.platformId);
-  }
+    afterNextRender(() => {
+      if (this.initialized) return;
+      this.initialized = true;
 
-  ngAfterViewInit(): void {
-    if (!this.isBrowser) return;
-    if (this.initialized) return;
-    this.initialized = true;
+      // Poll preloader completion — effect() doesn't fire reliably when
+      // PreloaderService.complete() is called from GSAP callbacks (outside NgZone).
+      this.pollTimer = setInterval(() => {
+        if (this.preloaderService.done()) {
+          clearInterval(this.pollTimer);
+          this.onPreloaderDone();
+        }
+      }, 50);
 
-    // Poll preloader completion — effect() doesn't fire reliably when
-    // PreloaderService.complete() is called from GSAP callbacks (outside NgZone).
-    this.pollTimer = setInterval(() => {
-      if (this.preloaderService.done()) {
-        clearInterval(this.pollTimer);
+      // Safety timeout: force init after 5s even if preloader never completes
+      this.safetyTimer = setTimeout(() => {
+        if (this.pollTimer) clearInterval(this.pollTimer);
         this.onPreloaderDone();
-      }
-    }, 50);
-
-    // Safety timeout: force init after 5s even if preloader never completes
-    this.safetyTimer = setTimeout(() => {
-      if (this.pollTimer) clearInterval(this.pollTimer);
-      this.onPreloaderDone();
-    }, 5000);
+      }, 5000);
+    });
   }
 
   ngOnDestroy(): void {
@@ -117,7 +109,7 @@ export class App implements AfterViewInit, OnDestroy {
 
     // Mobile menu cleanup
     this.killMobileMenuAnimations();
-    if (this.mobileMenuOpen && this.isBrowser) {
+    if (this.mobileMenuOpen) {
       document.body.style.overflow = '';
     }
   }
@@ -153,7 +145,6 @@ export class App implements AfterViewInit, OnDestroy {
   }
 
   protected openMobileMenu(): void {
-    if (!this.isBrowser) return;
     this.mobileMenuOpen = true;
 
     // Scroll lock
@@ -167,7 +158,6 @@ export class App implements AfterViewInit, OnDestroy {
   }
 
   protected closeMobileMenu(): void {
-    if (!this.isBrowser) return;
     this.mobileMenuOpen = false;
 
     // Re-enable scroll

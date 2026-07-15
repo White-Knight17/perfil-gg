@@ -1,13 +1,10 @@
 import {
   Component,
-  AfterViewInit,
   OnDestroy,
   ViewChild,
   ElementRef,
-  Inject,
-  PLATFORM_ID,
+  afterNextRender,
 } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -21,24 +18,18 @@ import { AnimationConfigService } from '../services/animation-config.service';
   templateUrl: './skills.html',
   styleUrl: './skills.css',
 })
-export class Skills implements AfterViewInit, OnDestroy {
+export class Skills implements OnDestroy {
   @ViewChild('skillsSection') skillsSection!: ElementRef<HTMLElement>;
 
-  private readonly isBrowser: boolean;
   private scrollTrigger?: ScrollTrigger;
   private barTweens: gsap.core.Tween[] = [];
 
   constructor(
-    @Inject(PLATFORM_ID) platformId: object,
     private readonly animationConfig: AnimationConfigService,
   ) {
-    this.isBrowser = isPlatformBrowser(platformId);
-  }
-
-  ngAfterViewInit(): void {
-    if (!this.isBrowser) return;
-
-    this.animateSkillBars();
+    afterNextRender(() => {
+      this.animateSkillBars();
+    });
   }
 
   ngOnDestroy(): void {

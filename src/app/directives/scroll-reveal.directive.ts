@@ -3,11 +3,9 @@ import {
   ElementRef,
   inject,
   input,
-  AfterViewInit,
   OnDestroy,
-  PLATFORM_ID,
+  afterNextRender,
 } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { AnimationConfigService } from '../services/animation-config.service';
@@ -27,9 +25,8 @@ import { AnimationConfigService } from '../services/animation-config.service';
   selector: '[appScrollReveal]',
   standalone: true,
 })
-export class ScrollRevealDirective implements AfterViewInit, OnDestroy {
+export class ScrollRevealDirective implements OnDestroy {
   private readonly el = inject(ElementRef);
-  private readonly platformId = inject(PLATFORM_ID);
   private readonly animationConfig = inject(AnimationConfigService);
 
   /** Direction from which the element enters */
@@ -47,9 +44,9 @@ export class ScrollRevealDirective implements AfterViewInit, OnDestroy {
   private animation?: gsap.core.Tween;
   private scrollTriggerInstance?: ScrollTrigger;
 
-  ngAfterViewInit(): void {
-    if (!isPlatformBrowser(this.platformId)) return;
-    if (this.animationConfig.reducedMotion()) return;
+  constructor() {
+    afterNextRender(() => {
+      if (this.animationConfig.reducedMotion()) return;
 
     const transforms: Record<string, { x?: number; y?: number }> = {
       up: { y: this.distance() },
@@ -79,6 +76,7 @@ export class ScrollRevealDirective implements AfterViewInit, OnDestroy {
     });
 
     this.scrollTriggerInstance = this.animation.scrollTrigger as ScrollTrigger;
+    });
   }
 
   ngOnDestroy(): void {
