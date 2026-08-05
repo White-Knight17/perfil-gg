@@ -43,7 +43,7 @@
 
 .project-slide-end-spacer {
   flex-shrink: 0;
-  width: 50vw;
+  width: 25vw;
 }
 
 .project-content {
@@ -142,8 +142,13 @@
 }
 
 @keyframes scrollPulse {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 1; }
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 @media (max-width: 1024px) {
