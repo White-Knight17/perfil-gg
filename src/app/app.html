@@ -4,7 +4,7 @@
 <!-- Main site content — hidden until preloader completes -->
 <div class="site-content" [class.site-content-visible]="preloaderDone()">
   <!-- Skip to content link -->
-  <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+  <!-- <a href="#main-content" class="skip-link">Saltar al contenido principal</a> -->
 
   <!-- Navigation -->
   <nav
@@ -34,6 +34,12 @@
             Proyectos
           </a>
           <a
+            href="#showcase"
+            (click)="scrollTo($event, 'showcase')"
+            class="nav-link flex items-center gap-1 px-2 py-1 rounded-md text-gray-300 hover:text-white transition-colors"
+            >Visualizaciones</a
+          >
+          <a
             href="#skills"
             (click)="scrollTo($event, 'skills')"
             class="nav-link flex items-center gap-1 px-2 py-1 rounded-md text-gray-300 hover:text-white transition-colors"
@@ -58,9 +64,18 @@
           [attr.aria-label]="mobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'"
           [attr.aria-expanded]="mobileMenuOpen"
         >
-          <span #hamburgerBar1 class="hamburger-bar block w-6 h-[2px] bg-gray-300 rounded origin-center"></span>
-          <span #hamburgerBar2 class="hamburger-bar block w-6 h-[2px] bg-gray-300 rounded mt-[5px] origin-center"></span>
-          <span #hamburgerBar3 class="hamburger-bar block w-6 h-[2px] bg-gray-300 rounded mt-[5px] origin-center"></span>
+          <span
+            #hamburgerBar1
+            class="hamburger-bar block w-6 h-[2px] bg-gray-300 rounded origin-center"
+          ></span>
+          <span
+            #hamburgerBar2
+            class="hamburger-bar block w-6 h-[2px] bg-gray-300 rounded mt-[5px] origin-center"
+          ></span>
+          <span
+            #hamburgerBar3
+            class="hamburger-bar block w-6 h-[2px] bg-gray-300 rounded mt-[5px] origin-center"
+          ></span>
         </button>
       </div>
     </div>
@@ -70,7 +85,7 @@
   <div
     #mobileMenuOverlay
     class="mobile-menu-overlay fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
-    style="display: none; opacity: 0;"
+    style="display: none; opacity: 0"
     (click)="closeMobileMenu()"
     aria-hidden="true"
   ></div>
@@ -79,7 +94,7 @@
   <div
     #mobileMenuPanel
     class="mobile-menu-panel fixed top-0 right-0 z-50 h-full w-72 max-w-[85vw] bg-gray-900 border-l border-gray-700/50 shadow-2xl"
-    style="transform: translateX(100%);"
+    style="transform: translateX(100%)"
     role="dialog"
     aria-modal="true"
     [attr.aria-label]="'Menú de navegación'"

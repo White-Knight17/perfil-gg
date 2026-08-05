@@ -56,7 +56,7 @@ export class App implements OnDestroy {
   private intersectionObserver?: IntersectionObserver;
 
   /** Section IDs to spy on, in visual order */
-  private readonly sectionIds = ['home', 'projects', 'skills', 'contact'];
+  private readonly sectionIds = ['home', 'projects', 'skills', 'showcase', 'contact'];
 
   // ---------------------------------------------------------------------------
   // Mobile menu template refs
@@ -226,13 +226,17 @@ export class App implements OnDestroy {
     } else {
       // Fade items out, slide panel right, fade overlay
       this.mobileMenuTimeline
-        .to(items, {
-          opacity: 0,
-          x: 20,
-          stagger: 0.04,
-          duration: 0.15,
-          ease: 'power2.in',
-        }, 0)
+        .to(
+          items,
+          {
+            opacity: 0,
+            x: 20,
+            stagger: 0.04,
+            duration: 0.15,
+            ease: 'power2.in',
+          },
+          0,
+        )
         .to(panel, { x: '100%', duration: 0.3, ease: 'power3.in' }, 0.1)
         .to(overlayEl, { opacity: 0, duration: 0.2, ease: 'power2.out' }, 0)
         .set(overlayEl, { display: 'none' });
