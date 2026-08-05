@@ -37,9 +37,11 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@analogjs/vite-plugin-angular": "^2.6.4",
     "@angular/build": "^21.2.1",
     "@angular/cli": "^21.2.1",
     "@angular/compiler-cli": "^21.2.0",
+    "@angular/platform-browser-dynamic": "^21.2.19",
     "@playwright/test": "^1.61.1",
     "@tailwindcss/postcss": "^4.1.12",
     "@types/express": "^5.0.1",

@@ -17,7 +17,7 @@ interface ShowcaseProject {
   standalone: true,
   imports: [BrowserMockup],
   templateUrl: './showcase.html',
-  styleUrl: './showcase.css'
+  styleUrl: './showcase.css',
 })
 export class Showcase implements OnDestroy {
   @ViewChild('showcaseSection') showcaseSection!: ElementRef<HTMLElement>;
@@ -29,11 +29,30 @@ export class Showcase implements OnDestroy {
     {
       id: 'wlop',
       name: 'WLOP Landing Page',
-      description: 'Landing page inmersiva para el artista digital WLOP. Galería interactiva con animaciones suaves y diseño minimalista que resalta el arte fantástico.',
+      description:
+        'Landing page inmersiva para el artista digital WLOP. Galería interactiva con animaciones suaves y diseño minimalista que resalta el arte fantástico.',
       stack: ['Angular', 'TypeScript', 'GSAP', 'Tailwind CSS'],
       url: 'https://wlop-landing-page.vercel.app/',
-      screenshot: '/assets/showcase/wlop-screenshot.png'
-    }
+      screenshot: '/assets/showcase/wlop-screenshot.png',
+    },
+    {
+      id: 'clima',
+      name: 'ClimaProject',
+      description:
+        'Aplicación del clima con búsqueda de ciudades en tiempo real. Interfaz limpia y responsiva con animaciones suaves y condiciones meteorológicas dinámicas.',
+      stack: ['Angular', 'TypeScript', 'Tailwind CSS', 'Lenis'],
+      url: 'https://clima-beta-seven.vercel.app/',
+      screenshot: '/assets/showcase/clima-screenshot.png',
+    },
+    {
+      id: 'brawl',
+      name: 'BrawlStats',
+      description:
+        'Prototipo de plataforma de estadísticas para Brawl Stars. Dashboard con animaciones GSAP que cargan progresivamente al entrar.',
+      stack: ['Angular', 'TypeScript', 'Tailwind CSS', 'GSAP'],
+      url: 'https://brawl-proto.vercel.app/',
+      screenshot: '/assets/showcase/brawl-screenshot.png',
+    },
   ];
 
   constructor() {
@@ -53,7 +72,7 @@ export class Showcase implements OnDestroy {
       this.scrollTrigger = ScrollTrigger.create({
         trigger: section,
         start: 'top top',
-        end: () => `+=${totalWidth}`,
+        end: () => `+=${totalWidth * 1.5}`,
         pin: true,
         scrub: 2,
         anticipatePin: 0,
