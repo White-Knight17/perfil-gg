@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { gsap } from 'gsap';
 import { PreloaderService } from '../services/preloader.service';
+import { AnimationConfigService } from '../services/animation-config.service';
 
 /**
  * Preloader component — full-screen intro animation.
@@ -43,9 +44,22 @@ export class Preloader implements OnDestroy {
 
   constructor(
     private readonly preloaderService: PreloaderService,
+    private readonly animationConfig: AnimationConfigService,
   ) {
     afterNextRender(() => {
       this.startTime = performance.now();
+
+      // Respect reduced motion: show the final state briefly and get out
+      // of the way instead of running the full choreography.
+      if (this.animationConfig.reducedMotion()) {
+        gsap.set(this.preloaderRef.nativeElement, {
+          autoAlpha: 0,
+          pointerEvents: 'none',
+        });
+        this.preloaderService.complete();
+        return;
+      }
+
       this.animateIntro();
     });
   }
@@ -73,12 +87,12 @@ export class Preloader implements OnDestroy {
       onComplete: () => this.onIntroComplete(),
     });
 
-    // 1. Avatar scales in
+    // 1. Monogram settles in
     this.introTimeline.to(this.avatarWrapperRef.nativeElement, {
       scale: 1,
       opacity: 1,
-      duration: 0.8,
-      ease: 'back.out(1.7)',
+      duration: 0.7,
+      ease: 'power3.out',
     });
 
     // 2. Start pulse glow (overlaps with subsequent steps)
@@ -90,23 +104,22 @@ export class Preloader implements OnDestroy {
       {
         opacity: 1,
         y: 0,
-        duration: 0.6,
+        duration: 0.55,
         ease: 'power2.out',
       },
-      '-=0.4',
+      '-=0.35',
     );
 
     // 4. Title staggered character reveal (overlaps name animation)
     this.titleStaggerTween = gsap.from(this.titleRef.nativeElement.children, {
       opacity: 0,
-      y: 10,
-      rotateX: -90,
-      stagger: 0.025,
-      duration: 0.45,
-      ease: 'back.out(1.7)',
+      y: 8,
+      stagger: 0.018,
+      duration: 0.35,
+      ease: 'power2.out',
     });
 
-    this.introTimeline.add(this.titleStaggerTween, '-=0.3');
+    this.introTimeline.add(this.titleStaggerTween, '-=0.25');
   }
 
   /** Wrap each character in a <span> for stagger animation */
@@ -124,12 +137,12 @@ export class Preloader implements OnDestroy {
     }
   }
 
-  /** Continuous pulsing glow around the avatar */
+  /** Continuous pulsing glow around the monogram */
   private startPulseGlow(): void {
     this.pulseTween = gsap.to(this.pulseRef.nativeElement, {
       boxShadow:
-        '0 0 20px rgba(102,126,234,0.4), 0 0 40px rgba(139,92,246,0.2)',
-      duration: 1.5,
+        '0 0 28px rgba(155,157,255,0.22), 0 0 60px rgba(155,157,255,0.10)',
+      duration: 1.6,
       yoyo: true,
       repeat: -1,
       ease: 'sine.inOut',

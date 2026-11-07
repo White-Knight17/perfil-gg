@@ -35,7 +35,7 @@ describe('Preloader', () => {
   it('should create', () => expect(component).toBeTruthy());
   it('has preloader overlay', () => expect(fixture.nativeElement.querySelector('.preloader-overlay')).toBeTruthy());
   it('displays GG initials', () => {
-    const text = fixture.nativeElement.querySelector('.gradient-text');
+    const text = fixture.nativeElement.querySelector('.preloader-monogram');
     expect(text).toBeTruthy();
     expect(text.textContent?.trim()).toBe('GG');
   });
