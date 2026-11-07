@@ -68,9 +68,9 @@ export class ScrollRevealDirective implements OnDestroy {
       ease: 'power3.out',
       scrollTrigger: {
         trigger: this.el.nativeElement,
-        start: 'top 85%',
-        end: 'top 30%',
-        toggleActions: 'play none none reverse',
+        start: 'top 88%',
+        // Play once: content the user already saw must never fade back out.
+        once: true,
         scroller: document.body, // Required: Lenis uses body as scroller proxy
       },
     });
