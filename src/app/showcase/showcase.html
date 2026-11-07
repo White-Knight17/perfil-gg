@@ -1,21 +1,32 @@
 <section #showcaseSection class="showcase-section">
   <div class="showcase-container">
-    <div class="section-header" appScrollReveal>
-      <h2 class="gradient-text">Vista de los proyectos</h2>
-      <p class="subtitle">Portfolio de algunos de mis proyectos </p>
-    </div>
+    <header class="section-header showcase-head shell">
+      <div>
+        <p class="eyebrow"><span class="eyebrow__index">04</span> Visualización</p>
+        <h2 class="section-title">Vista de los <span class="accent-text">proyectos</span></h2>
+      </div>
+      <p class="section-sub showcase-sub">Portfolio de algunos de mis proyectos</p>
+    </header>
 
     <div class="showcase-track" #showcaseTrack>
       @for (project of projects; track project.id) {
         <div class="project-slide">
           <div class="project-content">
             <div class="mockup-container">
+              <div class="mockup-glow" aria-hidden="true"></div>
               <app-browser-mockup [url]="project.url">
-                <img [src]="project.screenshot" [alt]="project.name" loading="lazy" width="1200" height="675" style="max-height: 60vh; object-fit: contain; width: 100%; display: block;">
+                <img
+                  [src]="project.screenshot"
+                  [alt]="project.name"
+                  loading="lazy"
+                  [width]="project.width"
+                  [height]="project.height"
+                />
               </app-browser-mockup>
             </div>
 
-            <div class="project-info" appScrollReveal>
+            <div class="project-info">
+              <span class="project-index">0{{ $index + 1 }} / 0{{ projects.length }}</span>
               <h3 class="project-name">{{ project.name }}</h3>
               <p class="project-description">{{ project.description }}</p>
 
@@ -25,9 +36,14 @@
                 }
               </div>
 
-              <a [href]="project.url" target="_blank" rel="noopener noreferrer" class="view-project-btn">
+              <a
+                [href]="project.url"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="view-project-btn"
+              >
                 Ver sitio en vivo
-                <span class="arrow">→</span>
+                <span class="arrow" aria-hidden="true">→</span>
               </a>
             </div>
           </div>
@@ -36,9 +52,14 @@
       <div class="project-slide-end-spacer"></div>
     </div>
 
-    <div class="scroll-indicator">
-      <span>Scroll para explorar</span>
-      <div class="scroll-line"></div>
+    <div class="showcase-footer shell">
+      <div class="showcase-progress" aria-hidden="true">
+        <span #showcaseProgress class="showcase-progress-fill"></span>
+      </div>
+      <div class="showcase-footer-meta">
+        <span class="mono-label">Desplazate para explorar</span>
+        <span class="mono-label">Horizontal</span>
+      </div>
     </div>
   </div>
 </section>

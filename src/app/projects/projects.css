@@ -1,50 +1,176 @@
-/* Language badge colors */
+/* ══════════════════════════════════════════════════════════════════
+   Grid
+   ══════════════════════════════════════════════════════════════════ */
+.projects-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .projects-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .projects-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   Card
+   ══════════════════════════════════════════════════════════════════ */
+.project-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 13.5rem;
+  padding: 1.5rem;
+  transform-style: preserve-3d;
+}
+
+/* Phones: cards without a description must not become empty boxes */
+@media (max-width: 639px) {
+  .project-card {
+    min-height: 0;
+    padding: 1.25rem;
+  }
+
+  .project-card-top {
+    margin-bottom: 0.85rem;
+  }
+
+  .project-footer {
+    margin-top: 1rem;
+    padding-top: 0.85rem;
+  }
+}
+
+.project-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.project-name {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--color-ink);
+  overflow-wrap: anywhere;
+}
+
+.project-desc {
+  flex: 1;
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: var(--color-muted);
+}
+
+.project-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-line);
+}
+
+.project-stats {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.project-stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  color: var(--color-muted);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   Language badge — a coloured dot, not a filled pill
+   ══════════════════════════════════════════════════════════════════ */
+.lang-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-faint);
+}
+
+.lang-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: currentColor;
+  box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 18%, transparent);
+}
+
 .lang-typescript {
-  background: rgba(59, 130, 246, 0.15);
-  color: #60a5fa;
-  border: 1px solid rgba(59, 130, 246, 0.3);
+  color: #6f9dff;
 }
 
 .lang-javascript {
-  background: rgba(250, 204, 21, 0.15);
-  color: #facc15;
-  border: 1px solid rgba(250, 204, 21, 0.3);
+  color: #e3c450;
 }
 
 .lang-python {
-  background: rgba(16, 185, 129, 0.15);
-  color: #34d399;
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #4ecb8f;
 }
 
 .lang-html {
-  background: rgba(239, 68, 68, 0.15);
-  color: #f87171;
-  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #ff8a7a;
 }
 
 .lang-css {
-  background: rgba(139, 92, 246, 0.15);
-  color: #a78bfa;
-  border: 1px solid rgba(139, 92, 246, 0.3);
+  color: #b39dff;
 }
 
 .lang-scss {
-  background: rgba(236, 72, 153, 0.15);
-  color: #f472b6;
-  border: 1px solid rgba(236, 72, 153, 0.3);
+  color: #f387bd;
 }
 
 .lang-default {
-  background: rgba(107, 114, 128, 0.15);
-  color: #9ca3af;
-  border: 1px solid rgba(107, 114, 128, 0.3);
+  color: #98a0ab;
 }
 
-.lang-badge {
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 500;
+/* ══════════════════════════════════════════════════════════════════
+   Loading skeleton
+   ══════════════════════════════════════════════════════════════════ */
+.project-skeleton {
+  position: relative;
+  min-height: 21rem;
+  overflow: hidden;
+}
+
+.project-skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.045), transparent);
+  transform: translateX(-100%);
+  animation: skeleton-sweep 1.8s var(--ease-soft-in-out) infinite;
+}
+
+@keyframes skeleton-sweep {
+  to {
+    transform: translateX(100%);
+  }
 }
