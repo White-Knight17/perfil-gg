@@ -23,24 +23,26 @@ import { TiltDirective } from '../../directives/tilt.directive';
   styles: [`
     :host {
       display: block;
-      perspective: 1000px;
+      perspective: 1200px;
     }
 
     .browser-mockup {
-      background: #1e293b;
-      border-radius: 12px;
+      background: #0b0d12;
+      border-radius: 14px;
       overflow: hidden;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--color-line-strong);
+      box-shadow:
+        0 40px 90px -45px rgba(0, 0, 0, 0.95),
+        0 0 0 1px rgba(255, 255, 255, 0.02);
     }
 
     .browser-header {
-      background: #0f172a;
-      padding: 12px 16px;
       display: flex;
       align-items: center;
       gap: 12px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 10px 14px;
+      background: #0e1116;
+      border-bottom: 1px solid var(--color-line);
     }
 
     .traffic-lights {
@@ -49,23 +51,26 @@ import { TiltDirective } from '../../directives/tilt.directive';
     }
 
     .dot {
-      width: 12px;
-      height: 12px;
+      width: 9px;
+      height: 9px;
       border-radius: 50%;
+      opacity: 0.9;
     }
 
-    .dot.red { background: #ef4444; }
-    .dot.yellow { background: #eab308; }
-    .dot.green { background: #22c55e; }
+    .dot.red { background: #e06c75; }
+    .dot.yellow { background: #e5c07b; }
+    .dot.green { background: #98c379; }
 
     .address-bar {
       flex: 1;
-      background: rgba(255, 255, 255, 0.05);
-      padding: 6px 12px;
+      min-width: 0;
+      padding: 5px 10px;
+      border: 1px solid var(--color-line);
       border-radius: 6px;
-      font-size: 12px;
-      color: #94a3b8;
-      font-family: 'JetBrains Mono', monospace;
+      background: #ffffff08;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--color-faint);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -81,7 +86,7 @@ import { TiltDirective } from '../../directives/tilt.directive';
       max-height: 60vh;
       object-fit: contain;
       display: block;
-      background: #0f172a;
+      background: #0b0d12;
     }
   `]
 })

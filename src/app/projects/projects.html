@@ -1,99 +1,112 @@
-<section appScrollReveal class="py-20 bg-gray-950 relative">
-  <div
-    class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-950/30 via-transparent to-transparent"
-  ></div>
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+<section appScrollReveal class="section section--line">
+  <div class="shell">
+    <header class="section-head">
+      <div>
+        <p class="eyebrow"><span class="eyebrow__index">02</span> Proyectos</p>
+        <h2 class="section-title">Proyectos &amp; <span class="accent-text">portfolio</span></h2>
+      </div>
+      <p class="section-sub">
+        Repositorios públicos obtenidos en vivo desde la API de GitHub, ordenados por actividad
+        reciente.
+      </p>
+    </header>
+
     @if (isLoading()) {
-    <div class="text-center py-12">
-      <div
-        class="animate-spin rounded-full h-10 w-10 border-2 border-indigo-500 border-t-transparent mx-auto"
-      ></div>
-      <p class="mt-4 text-gray-400">Cargando tus proyectos desde GitHub...</p>
-    </div>
-    } @else if (isError()) {
-    <div class="text-center py-12 bg-red-950/30 rounded-lg p-6 border border-red-800/50">
-      <h3 class="text-red-400 font-bold mb-2">Error al cargar proyectos</h3>
-      <p class="text-red-300/70">{{ errorMessage() }}</p>
-      <button
-        mat-button
-        class="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-6 py-2 rounded-lg"
-        (click)="retry()"
-      >
-        Intentar nuevamente
-      </button>
-    </div>
-    } @else if (isEmpty()) {
-    <div class="text-center py-12">
-      <p class="text-gray-400">No se encontraron proyectos públicos en tu perfil de GitHub.</p>
-    </div>
-    } @else {
-    <h2 class="text-4xl font-bold text-center mb-4 gradient-text">Proyectos/Portfolio</h2>
-    <p class="text-center text-gray-400 mb-12 max-w-2xl mx-auto">
-      Repositorios públicos obtenidos directamente desde GitHub
-    </p>
-    <div appStaggerList class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-      @for (project of projects(); track project.name) {
-      <mat-card
-        appTilt
-        class="project-card-hover flex flex-col h-full bg-gray-900 rounded-xl overflow-hidden transition-all duration-300"
-      >
-        <!-- Language Badge -->
-        @if (project.language) {
-        <div class="p-4 pb-0">
-          <span class="lang-badge" [class]="getLangClass(project.language)">
-            {{ project.language }}
-          </span>
-        </div>
+      <div class="projects-grid" aria-hidden="true">
+        @for (item of [1, 2, 3]; track item) {
+          <div class="project-skeleton surface"></div>
         }
+      </div>
+      <p class="sr-only" role="status">Cargando proyectos desde GitHub</p>
+    } @else if (isError()) {
+      <div class="surface p-8 text-center sm:p-12">
+        <p class="mono-label mb-3 text-red-400">Error</p>
+        <h3 class="text-lg font-medium text-ink">No pudimos cargar los proyectos</h3>
+        <p class="mx-auto mt-2 max-w-md text-sm text-muted">{{ errorMessage() }}</p>
+        <button type="button" class="btn btn--ghost mt-6" (click)="retry()">
+          Intentar nuevamente
+        </button>
+      </div>
+    } @else if (isEmpty()) {
+      <div class="surface p-8 text-center sm:p-12">
+        <p class="mono-label mb-3">Sin resultados</p>
+        <p class="text-sm text-muted">
+          No se encontraron repositorios públicos en el perfil de GitHub.
+        </p>
+      </div>
+    } @else {
+      <div appStaggerList class="projects-grid">
+        @for (project of projects(); track project.name) {
+          <article appTilt [maxTilt]="4" [scale]="1" class="project-card surface surface-hover">
+            <div class="project-card-top">
+              @if (project.language) {
+                <span class="lang-badge" [class]="getLangClass(project.language)">
+                  {{ project.language }}
+                </span>
+              } @else {
+                <span class="lang-badge lang-default">Sin lenguaje</span>
+              }
+            </div>
 
-        <!-- Project Info -->
-        <div class="flex-1 p-6 flex flex-col">
-          <h3 class="text-xl font-semibold mb-3 text-white">{{ project.name }}</h3>
-          <p class="text-gray-400 flex-1 mb-4 text-sm leading-relaxed">
-            {{ project.description || 'Descripción no disponible' }}
-          </p>
-
-          <!-- Stats -->
-          <div class="flex flex-wrap gap-4 mb-4 text-sm text-gray-500">
-            <span class="flex items-center gap-1">
-              <mat-icon class="text-yellow-500 text-sm">star</mat-icon>
-              <span appCounterAnimation [duration]="1.5">{{ project.stargazers_count }}</span>
-            </span>
-            <span class="flex items-center gap-1">
-              <mat-icon class="text-gray-400 text-sm">call_split</mat-icon>
-              <span appCounterAnimation [duration]="1.5">{{ project.forks_count }}</span>
-            </span>
-          </div>
-
-          <!-- Topics/Tags -->
-          @if (project.topics && project.topics.length > 0) {
-          <div class="flex flex-wrap gap-2 mb-4">
-            @for (topic of project.topics.slice(0, 4); track topic) {
-            <span
-              class="bg-indigo-500/10 text-indigo-400 text-xs px-2 py-1 rounded-full font-medium border border-indigo-500/20"
-            >
-              #{{ topic }}
-            </span>
+            <h3 class="project-name">{{ project.name }}</h3>
+            @if (project.description) {
+              <p class="project-desc">{{ project.description }}</p>
             }
-          </div>
-          }
 
-          <!-- Action Buttons -->
-          <div class="mt-auto pt-4">
-            <a
-              [href]="project.html_url"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-medium py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 transition-all duration-300"
-            >
-              <mat-icon class="text-sm">open_in_new</mat-icon>
-              Ver en GitHub
-            </a>
-          </div>
-        </div>
-      </mat-card>
-      }
-    </div>
+            @if (project.topics && project.topics.length > 0) {
+              <div class="mt-4 flex flex-wrap gap-1.5">
+                @for (topic of project.topics.slice(0, 4); track topic) {
+                  <span class="chip">#{{ topic }}</span>
+                }
+              </div>
+            }
+
+            <div class="project-footer">
+              <div class="project-stats">
+                <span class="project-stat">
+                  <svg
+                    class="h-3.5 w-3.5"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.3"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M8 1.8 9.9 5.7l4.3.6-3.1 3 .7 4.3L8 11.6l-3.8 2 .7-4.3-3.1-3 4.3-.6Z" />
+                  </svg>
+                  <span appCounterAnimation [duration]="1.5">{{ project.stargazers_count }}</span>
+                </span>
+                <span class="project-stat">
+                  <svg
+                    class="h-3.5 w-3.5"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M4.5 2.5a1.6 1.6 0 1 0 0 3.2 1.6 1.6 0 0 0 0-3.2ZM11.5 2.5a1.6 1.6 0 1 0 0 3.2 1.6 1.6 0 0 0 0-3.2ZM4.5 10.3a1.6 1.6 0 1 0 0 3.2 1.6 1.6 0 0 0 0-3.2ZM11.5 10.3a1.6 1.6 0 1 0 0 3.2 1.6 1.6 0 0 0 0-3.2ZM6.1 4.1h3.8M4.5 5.7v4.6M11.5 5.7v4.6M6.1 11.9h3.8" />
+                  </svg>
+                  <span appCounterAnimation [duration]="1.5">{{ project.forks_count }}</span>
+                </span>
+              </div>
+
+              <a
+                [href]="project.html_url"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn btn--ghost btn--sm"
+              >
+                Ver en GitHub
+                <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </article>
+        }
+      </div>
     }
   </div>
 </section>

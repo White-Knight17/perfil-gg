@@ -1,7 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
-import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
+import { Component, computed } from '@angular/core';
 import { ScrollRevealDirective } from '../directives/scroll-reveal.directive';
 import { StaggerListDirective } from '../directives/stagger-list.directive';
 import { CounterAnimationDirective } from '../directives/counter-animation.directive';
@@ -12,7 +9,6 @@ import { useGithubReposQuery, type GitHubRepository } from '../github';
   selector: 'app-projects',
   standalone: true,
   imports: [
-    MatCardModule, MatButtonModule, MatIconModule,
     ScrollRevealDirective, StaggerListDirective,
     CounterAnimationDirective, TiltDirective,
   ],

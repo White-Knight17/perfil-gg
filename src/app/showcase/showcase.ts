@@ -10,8 +10,22 @@ interface ShowcaseProject {
   stack: string[];
   url: string;
   screenshot: string;
+  width: number;
+  height: number;
 }
 
+/**
+ * Projects showcase.
+ *
+ * Desktop + motion allowed: the section pins and the track scrolls
+ * horizontally, driven by ScrollTrigger.
+ *
+ * Phones, tablets and `prefers-reduced-motion`: the CSS turns the track into
+ * a native scroll-snap carousel. The layout is decided by media queries, so
+ * rotating the device or resizing the window can never leave a half-pinned
+ * section behind — `gsap.matchMedia` creates and reverts the pin as the
+ * query flips.
+ */
 @Component({
   selector: 'app-showcase',
   standalone: true,
@@ -22,8 +36,9 @@ interface ShowcaseProject {
 export class Showcase implements OnDestroy {
   @ViewChild('showcaseSection') showcaseSection!: ElementRef<HTMLElement>;
   @ViewChild('showcaseTrack') showcaseTrack!: ElementRef<HTMLElement>;
+  @ViewChild('showcaseProgress') showcaseProgress!: ElementRef<HTMLElement>;
 
-  private scrollTrigger?: ScrollTrigger;
+  private motionMedia?: ReturnType<typeof gsap.matchMedia>;
 
   projects: ShowcaseProject[] = [
     {
@@ -33,7 +48,9 @@ export class Showcase implements OnDestroy {
         'Landing page inmersiva para el artista digital WLOP. Galería interactiva con animaciones suaves y diseño minimalista que resalta el arte fantástico.',
       stack: ['Angular', 'TypeScript', 'GSAP', 'Tailwind CSS'],
       url: 'https://wlop-landing-page.vercel.app/',
-      screenshot: '/assets/showcase/wlop-screenshot.png',
+      screenshot: '/assets/showcase/wlop-screenshot.webp',
+      width: 1600,
+      height: 835,
     },
     {
       id: 'clima',
@@ -42,7 +59,9 @@ export class Showcase implements OnDestroy {
         'Aplicación del clima con búsqueda de ciudades en tiempo real. Interfaz limpia y responsiva con animaciones suaves y condiciones meteorológicas dinámicas.',
       stack: ['Angular', 'TypeScript', 'Tailwind CSS', 'Lenis'],
       url: 'https://clima-beta-seven.vercel.app/',
-      screenshot: '/assets/showcase/clima-screenshot.png',
+      screenshot: '/assets/showcase/clima-screenshot.webp',
+      width: 1600,
+      height: 743,
     },
     {
       id: 'brawl',
@@ -51,40 +70,60 @@ export class Showcase implements OnDestroy {
         'Prototipo de plataforma de estadísticas para Brawl Stars. Dashboard con animaciones GSAP que cargan progresivamente al entrar.',
       stack: ['Angular', 'TypeScript', 'Tailwind CSS', 'GSAP'],
       url: 'https://brawl-proto.vercel.app/',
-      screenshot: '/assets/showcase/brawl-screenshot.png',
+      screenshot: '/assets/showcase/brawl-screenshot.webp',
+      width: 1600,
+      height: 743,
     },
   ];
 
   constructor() {
     afterNextRender(() => {
       gsap.registerPlugin(ScrollTrigger);
+      this.motionMedia = gsap.matchMedia();
 
-      const track = this.showcaseTrack.nativeElement;
-      const section = this.showcaseSection.nativeElement;
+      this.motionMedia.add(
+        '(min-width: 1024px) and (prefers-reduced-motion: no-preference)',
+        () => {
+          const section = this.showcaseSection.nativeElement;
+          const track = this.showcaseTrack.nativeElement;
+          const progressFill = this.showcaseProgress.nativeElement;
 
-      const totalWidth = track.scrollWidth - window.innerWidth;
+          const xTo = gsap.quickTo(track, 'x', { duration: 0.5, ease: 'power2.out' });
+          const progressTo = gsap.quickTo(progressFill, 'scaleX', {
+            duration: 0.3,
+            ease: 'power2.out',
+          });
 
-      const xTo = gsap.quickTo(track, 'x', {
-        duration: 0.6,
-        ease: 'power2.out',
-      });
+          const travelDistance = () => Math.max(0, track.scrollWidth - window.innerWidth);
 
-      this.scrollTrigger = ScrollTrigger.create({
-        trigger: section,
-        start: 'top top',
-        end: () => `+=${totalWidth * 1.5}`,
-        pin: true,
-        scrub: 2,
-        anticipatePin: 0,
-        scroller: document.body,
-        onUpdate: (self) => {
-          xTo(-self.progress * totalWidth);
+          const trigger = ScrollTrigger.create({
+            trigger: section,
+            start: 'top top',
+            end: () => `+=${travelDistance() * 1.1}`,
+            pin: true,
+            scrub: 0.8,
+            anticipatePin: 0,
+            invalidateOnRefresh: true,
+            scroller: document.body, // Required: Lenis uses body as scroller proxy
+            onUpdate: (self) => {
+              xTo(-self.progress * travelDistance());
+              progressTo(self.progress);
+            },
+          });
+
+          // Hand the layout back to the CSS carousel when the query stops
+          // matching (resize / rotation / reduced-motion change).
+          return () => {
+            trigger.kill();
+            gsap.set(track, { clearProps: 'transform' });
+            gsap.set(progressFill, { scaleX: 0 });
+          };
         },
-      });
+      );
     });
   }
 
   ngOnDestroy(): void {
-    this.scrollTrigger?.kill();
+    this.motionMedia?.revert();
   }
 }

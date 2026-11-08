@@ -3,80 +3,103 @@
 
 <!-- Main site content — hidden until preloader completes -->
 <div class="site-content" [class.site-content-visible]="preloaderDone()">
-  <!-- Skip to content link -->
-  <!-- <a href="#main-content" class="skip-link">Saltar al contenido principal</a> -->
-
   <!-- Navigation -->
   <nav
     aria-label="Principal"
-    class="fixed top-0 left-0 right-0 z-50 bg-gray-900/80 backdrop-blur-md border-b border-gray-700/50"
+    class="fixed top-0 left-0 right-0 z-50 border-b border-line bg-canvas/70 backdrop-blur-xl"
   >
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-16">
-        <a href="#home" class="text-xl font-bold gradient-text">German Giorgio</a>
+    <div class="shell">
+      <div class="flex h-16 items-center justify-between gap-6">
+        <!-- Wordmark -->
+        <a
+          href="#home"
+          (click)="scrollTo($event, 'home')"
+          class="group flex min-h-11 min-w-11 items-center gap-3"
+          aria-label="German Giorgio — inicio"
+        >
+          <span
+            class="grid h-8 w-8 place-items-center rounded-[10px] border border-line-strong bg-white/[0.04] font-mono text-[0.6875rem] font-medium tracking-[0.08em] text-ink transition-colors duration-300 group-hover:border-accent/50 group-hover:text-accent-strong"
+          >
+            GG
+          </span>
+          <span class="hidden whitespace-nowrap sm:block text-[0.9375rem] font-medium tracking-tight text-ink">
+            German Giorgio
+          </span>
+        </a>
 
         <!-- Desktop nav links -->
-        <div class="hidden md:flex space-x-8">
+        <div class="hidden items-center gap-1 lg:flex">
           <a
             href="#home"
             (click)="scrollTo($event, 'home')"
-            class="nav-link flex items-center gap-1 px-2 py-1 rounded-md text-gray-300 hover:text-white transition-colors"
-            [class.active]="activeSection === 'home'"
+            class="nav-link"
+            [class.active]="activeSection() === 'home'"
+            >Inicio</a
           >
-            Inicio
-          </a>
           <a
             href="#projects"
             (click)="scrollTo($event, 'projects')"
-            class="nav-link flex items-center gap-1 px-2 py-1 rounded-md text-gray-300 hover:text-white transition-colors"
-            [class.active]="activeSection === 'projects'"
+            class="nav-link"
+            [class.active]="activeSection() === 'projects'"
+            >Proyectos</a
           >
-            Proyectos
-          </a>
           <a
             href="#showcase"
             (click)="scrollTo($event, 'showcase')"
-            class="nav-link flex items-center gap-1 px-2 py-1 rounded-md text-gray-300 hover:text-white transition-colors"
-            >visualización</a
+            class="nav-link"
+            [class.active]="activeSection() === 'showcase'"
+            >Visualización</a
           >
           <a
             href="#skills"
             (click)="scrollTo($event, 'skills')"
-            class="nav-link flex items-center gap-1 px-2 py-1 rounded-md text-gray-300 hover:text-white transition-colors"
-            [class.active]="activeSection === 'skills'"
+            class="nav-link"
+            [class.active]="activeSection() === 'skills'"
+            >Habilidades</a
           >
-            Habilidades
-          </a>
           <a
             href="#contact"
             (click)="scrollTo($event, 'contact')"
-            class="nav-link flex items-center gap-1 px-2 py-1 rounded-md text-gray-300 hover:text-white transition-colors"
-            [class.active]="activeSection === 'contact'"
+            class="nav-link"
+            [class.active]="activeSection() === 'contact'"
+            >Contacto</a
           >
-            Contacto
-          </a>
         </div>
 
-        <!-- Hamburger button (mobile only) -->
-        <button
-          class="hamburger-btn md:hidden relative z-[60] flex flex-col items-center justify-center w-10 h-10 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
-          (click)="toggleMobileMenu()"
-          [attr.aria-label]="mobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'"
-          [attr.aria-expanded]="mobileMenuOpen"
-        >
-          <span
-            #hamburgerBar1
-            class="hamburger-bar block w-6 h-[2px] bg-gray-300 rounded origin-center"
-          ></span>
-          <span
-            #hamburgerBar2
-            class="hamburger-bar block w-6 h-[2px] bg-gray-300 rounded mt-[5px] origin-center"
-          ></span>
-          <span
-            #hamburgerBar3
-            class="hamburger-bar block w-6 h-[2px] bg-gray-300 rounded mt-[5px] origin-center"
-          ></span>
-        </button>
+        <!-- Right actions -->
+        <div class="flex items-center gap-2">
+          <a
+            href="https://github.com/White-Knight17"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hidden h-11 items-center gap-2 rounded-[10px] border border-line px-3 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-muted transition-colors duration-300 hover:border-line-strong hover:text-ink sm:inline-flex lg:h-9"
+            aria-label="Perfil de GitHub de German Giorgio"
+          >
+            <i class="fa-brands fa-github text-sm" aria-hidden="true"></i>
+            GitHub
+          </a>
+
+          <!-- Hamburger button (mobile only) -->
+          <button
+            class="hamburger-btn relative z-[60] flex h-11 w-11 flex-col items-center justify-center rounded-lg lg:hidden"
+            (click)="toggleMobileMenu()"
+            [attr.aria-label]="mobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'"
+            [attr.aria-expanded]="mobileMenuOpen"
+          >
+            <span
+              #hamburgerBar1
+              class="hamburger-bar block h-[1.5px] w-6 origin-center rounded bg-ink"
+            ></span>
+            <span
+              #hamburgerBar2
+              class="hamburger-bar mt-[5px] block h-[1.5px] w-6 origin-center rounded bg-ink"
+            ></span>
+            <span
+              #hamburgerBar3
+              class="hamburger-bar mt-[5px] block h-[1.5px] w-6 origin-center rounded bg-ink"
+            ></span>
+          </button>
+        </div>
       </div>
     </div>
   </nav>
@@ -84,7 +107,7 @@
   <!-- Mobile menu overlay -->
   <div
     #mobileMenuOverlay
-    class="mobile-menu-overlay fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
+    class="mobile-menu-overlay fixed inset-0 z-30 bg-black/70 backdrop-blur-sm"
     style="display: none; opacity: 0"
     (click)="closeMobileMenu()"
     aria-hidden="true"
@@ -93,46 +116,94 @@
   <!-- Mobile menu panel -->
   <div
     #mobileMenuPanel
-    class="mobile-menu-panel fixed top-0 right-0 z-50 h-full w-72 max-w-[85vw] bg-gray-900 border-l border-gray-700/50 shadow-2xl"
+    class="mobile-menu-panel fixed top-0 right-0 z-40 h-full w-80 max-w-[88vw] border-l border-line bg-canvas shadow-2xl"
     style="transform: translateX(100%)"
     role="dialog"
     aria-modal="true"
     [attr.aria-label]="'Menú de navegación'"
   >
-    <nav class="flex flex-col items-start justify-center h-full px-8 gap-6">
-      <a
-        #mobileMenuItem
-        href="#home"
-        (click)="scrollTo($event, 'home'); closeMobileMenu()"
-        class="text-xl font-medium text-gray-300 hover:text-white transition-colors"
-      >
-        Inicio
-      </a>
-      <a
-        #mobileMenuItem
-        href="#projects"
-        (click)="scrollTo($event, 'projects'); closeMobileMenu()"
-        class="text-xl font-medium text-gray-300 hover:text-white transition-colors"
-      >
-        Proyectos
-      </a>
-      <a
-        #mobileMenuItem
-        href="#skills"
-        (click)="scrollTo($event, 'skills'); closeMobileMenu()"
-        class="text-xl font-medium text-gray-300 hover:text-white transition-colors"
-      >
-        Habilidades
-      </a>
-      <a
-        #mobileMenuItem
-        href="#contact"
-        (click)="scrollTo($event, 'contact'); closeMobileMenu()"
-        class="text-xl font-medium text-gray-300 hover:text-white transition-colors"
-      >
-        Contacto
-      </a>
-    </nav>
+    <div class="flex h-full flex-col px-8 pb-10 pt-24">
+      <p class="mono-label mb-8">Navegación</p>
+      <nav class="flex flex-col items-start gap-5">
+        <a
+          #mobileMenuItem
+          href="#home"
+          (click)="scrollTo($event, 'home'); closeMobileMenu()"
+          class="mobile-menu-link"
+        >
+          <span class="mobile-menu-index">01</span>Inicio
+        </a>
+        <a
+          #mobileMenuItem
+          href="#projects"
+          (click)="scrollTo($event, 'projects'); closeMobileMenu()"
+          class="mobile-menu-link"
+        >
+          <span class="mobile-menu-index">02</span>Proyectos
+        </a>
+        <a
+          #mobileMenuItem
+          href="#showcase"
+          (click)="scrollTo($event, 'showcase'); closeMobileMenu()"
+          class="mobile-menu-link"
+        >
+          <span class="mobile-menu-index">03</span>Visualización
+        </a>
+        <a
+          #mobileMenuItem
+          href="#skills"
+          (click)="scrollTo($event, 'skills'); closeMobileMenu()"
+          class="mobile-menu-link"
+        >
+          <span class="mobile-menu-index">04</span>Habilidades
+        </a>
+        <a
+          #mobileMenuItem
+          href="#contact"
+          (click)="scrollTo($event, 'contact'); closeMobileMenu()"
+          class="mobile-menu-link"
+        >
+          <span class="mobile-menu-index">05</span>Contacto
+        </a>
+      </nav>
+
+      <div class="mt-auto space-y-4">
+        <div class="hairline"></div>
+        <div class="flex items-center gap-2 text-xs text-muted">
+          <span class="status-dot" aria-hidden="true"></span>
+          Disponible para nuevos proyectos
+        </div>
+        <div class="flex gap-2 pt-1">
+          <a
+            href="https://github.com/White-Knight17"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn btn--ghost btn--sm flex-1"
+            aria-label="Perfil de GitHub"
+          >
+            <i class="fa-brands fa-github" aria-hidden="true"></i>
+          </a>
+          <a
+            href="https://www.linkedin.com/in/germangiorgio/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn btn--ghost btn--sm flex-1"
+            aria-label="Perfil de LinkedIn"
+          >
+            <i class="fa-brands fa-linkedin" aria-hidden="true"></i>
+          </a>
+          <a
+            href="https://wa.me/5493541617031"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn btn--ghost btn--sm flex-1"
+            aria-label="Chat de WhatsApp"
+          >
+            <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+          </a>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Main content -->
@@ -146,54 +217,114 @@
   </main>
 
   <!-- Footer -->
-  <footer class="bg-gray-950 text-gray-400 py-12 border-t border-gray-800">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex flex-col items-center gap-6">
-        <h3 class="text-xl font-semibold text-white">Conectemos</h3>
-        <div class="flex gap-4">
-          <!-- LinkedIn -->
-          <a
-            href="https://www.linkedin.com/in/germangiorgio/"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-600/10 border border-blue-600/30 text-blue-400 hover:bg-blue-600/20 hover:border-blue-500/50 transition-all duration-300 hover:-translate-y-1"
-            aria-label="Perfil de LinkedIn de German Giorgio"
-          >
-            <i class="fa-brands fa-linkedin text-xl"></i>
-            <span class="font-medium">LinkedIn</span>
-          </a>
-          <!-- WhatsApp -->
-          <a
-            href="https://wa.me/5493541617031"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="flex items-center gap-2 px-6 py-3 rounded-xl bg-green-600/10 border border-green-600/30 text-green-400 hover:bg-green-600/20 hover:border-green-500/50 transition-all duration-300 hover:-translate-y-1"
-            aria-label="Chat de WhatsApp con German Giorgio"
-          >
-            <i class="fa-brands fa-whatsapp text-xl"></i>
-            <span class="font-medium">WhatsApp</span>
-          </a>
+  <footer class="border-t border-line bg-canvas">
+    <div class="shell py-16">
+      <div class="grid gap-12 lg:grid-cols-[1.4fr_1fr] lg:gap-16">
+        <!-- Brand + statement -->
+        <div>
+          <div class="flex items-center gap-3">
+            <span
+              class="grid h-9 w-9 place-items-center rounded-[10px] border border-line-strong bg-white/[0.04] font-mono text-[0.6875rem] text-ink"
+              >GG</span
+            >
+            <div>
+              <p class="text-[0.9375rem] font-medium tracking-tight text-ink">German Giorgio</p>
+              <p class="font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-faint">
+                Full-Stack Developer
+              </p>
+            </div>
+          </div>
+
+          <p class="mt-6 max-w-md text-[1.375rem] font-medium leading-snug tracking-tight text-ink">
+            ¿Tienes un proyecto en mente?
+            <span class="text-muted">Construyámoslo juntos.</span>
+          </p>
+
+          <div class="mt-6 flex flex-wrap gap-2">
+            <a
+              href="https://www.linkedin.com/in/germangiorgio/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn--ghost btn--sm"
+              aria-label="Perfil de LinkedIn de German Giorgio"
+            >
+              <i class="fa-brands fa-linkedin text-sm" aria-hidden="true"></i>
+              LinkedIn
+            </a>
+            <a
+              href="https://wa.me/5493541617031"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn--ghost btn--sm"
+              aria-label="Chat de WhatsApp con German Giorgio"
+            >
+              <i class="fa-brands fa-whatsapp text-sm" aria-hidden="true"></i>
+              WhatsApp
+            </a>
+            <a
+              href="https://github.com/White-Knight17"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn--ghost btn--sm"
+              aria-label="Perfil de GitHub de German Giorgio"
+            >
+              <i class="fa-brands fa-github text-sm" aria-hidden="true"></i>
+              GitHub
+            </a>
+          </div>
         </div>
-        <p class="text-sm text-gray-500 mt-4">
-          &copy; 2026 German Giorgio. Todos los derechos reservados.
+
+        <!-- Link columns -->
+        <div class="grid grid-cols-2 gap-8 sm:gap-12 lg:justify-items-end">
+          <div>
+            <p class="mono-label mb-4">Secciones</p>
+            <ul class="space-y-2.5 text-sm">
+              <li>
+                <a href="#home" (click)="scrollTo($event, 'home')" class="footer-link">Inicio</a>
+              </li>
+              <li>
+                <a href="#projects" (click)="scrollTo($event, 'projects')" class="footer-link"
+                  >Proyectos</a
+                >
+              </li>
+              <li>
+                <a href="#showcase" (click)="scrollTo($event, 'showcase')" class="footer-link"
+                  >Visualización</a
+                >
+              </li>
+              <li>
+                <a href="#skills" (click)="scrollTo($event, 'skills')" class="footer-link"
+                  >Habilidades</a
+                >
+              </li>
+              <li>
+                <a href="#contact" (click)="scrollTo($event, 'contact')" class="footer-link"
+                  >Contacto</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <p class="mono-label mb-4">Stack</p>
+            <ul class="space-y-2.5 text-sm text-muted">
+              <li>Angular</li>
+              <li>NestJS</li>
+              <li>PostgreSQL</li>
+              <li>IA &amp; LLMs</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-14 flex flex-col gap-3 border-t border-line pt-6 sm:flex-row sm:items-center sm:justify-between">
+        <p class="font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-faint">
+          &copy; 2026 German Giorgio
+        </p>
+        <p class="font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-faint">
+          Angular · Tailwind · GSAP
         </p>
       </div>
     </div>
   </footer>
 </div>
-
-<style>
-  .skip-link {
-    position: absolute;
-    top: -40px;
-    left: 0;
-    background: #000;
-    color: #fff;
-    padding: 8px;
-    z-index: 1000;
-  }
-
-  .skip-link:focus {
-    top: 0;
-  }
-</style>

@@ -1,0 +1,227 @@
+/* ══════════════════════════════════════════════════════════════════
+   Layout
+   ══════════════════════════════════════════════════════════════════ */
+.contact-layout {
+  display: grid;
+  gap: 3rem;
+  align-items: start;
+}
+
+@media (min-width: 1024px) {
+  .contact-layout {
+    grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
+    gap: 4.5rem;
+  }
+}
+
+.contact-lead {
+  max-width: 44ch;
+  margin-top: 1.25rem;
+  color: var(--color-muted);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   Direct channels
+   ══════════════════════════════════════════════════════════════════ */
+.contact-channels {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 2.5rem;
+}
+
+.contact-channel {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  text-decoration: none;
+  transition:
+    background-color 0.25s var(--ease-soft),
+    border-color 0.25s var(--ease-soft);
+}
+
+.contact-channel:hover {
+  background: #ffffff06;
+  border-color: var(--color-line-strong);
+}
+
+.contact-channel-icon {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1px solid var(--color-line);
+  border-radius: 9px;
+  background: #ffffff04;
+  color: var(--color-muted);
+  font-size: 0.9375rem;
+  transition: color 0.25s var(--ease-soft);
+}
+
+.contact-channel:hover .contact-channel-icon {
+  color: var(--color-ink);
+}
+
+.contact-channel-body {
+  display: grid;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.contact-channel-label {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-faint);
+}
+
+.contact-channel-value {
+  font-size: 0.875rem;
+  color: var(--color-ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.contact-channel-arrow {
+  color: var(--color-faint);
+  transition:
+    transform 0.25s var(--ease-soft),
+    color 0.25s var(--ease-soft);
+}
+
+.contact-channel:hover .contact-channel-arrow {
+  transform: translateX(3px);
+  color: var(--color-accent);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   Form panel
+   ══════════════════════════════════════════════════════════════════ */
+.contact-panel {
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+.field-grid {
+  display: grid;
+  gap: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .field-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.field {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.field-label {
+  font-family: var(--font-mono);
+  font-size: 0.6563rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-faint);
+}
+
+.field-input {
+  width: 100%;
+  min-height: 46px;
+  padding: 0.72rem 0.9rem;
+  border: 1px solid var(--color-line);
+  border-radius: 10px;
+  background: #ffffff05;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  /* 16px keeps iOS Safari from zooming the page on focus */
+  font-size: 1rem;
+  transition:
+    border-color 0.25s var(--ease-soft),
+    background-color 0.25s var(--ease-soft),
+    box-shadow 0.25s var(--ease-soft);
+}
+
+.field-input::placeholder {
+  color: #6a7180cc;
+}
+
+.field-input:hover {
+  border-color: var(--color-line-strong);
+}
+
+.field-input:focus {
+  outline: none;
+  border-color: color-mix(in srgb, var(--color-accent) 55%, transparent);
+  background: #ffffff08;
+  box-shadow: 0 0 0 3px rgba(155, 157, 255, 0.12);
+}
+
+.field-input--error,
+.field-input--error:hover {
+  border-color: rgba(248, 113, 113, 0.55);
+}
+
+.field-input--error:focus {
+  box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.14);
+}
+
+.field-textarea {
+  min-height: 8.5rem;
+  resize: vertical;
+}
+
+.field-error {
+  font-size: 0.75rem;
+  color: #f89b9b;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   Success / error states
+   ══════════════════════════════════════════════════════════════════ */
+.contact-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-block: 3rem;
+  text-align: center;
+}
+
+.contact-state-icon {
+  display: grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  margin-bottom: 1.25rem;
+  border-radius: 999px;
+}
+
+.contact-state-icon--success {
+  background: rgba(74, 222, 128, 0.12);
+  color: #4ade80;
+}
+
+.contact-state-icon--error {
+  background: rgba(248, 113, 113, 0.12);
+  color: #f87171;
+}
+
+.contact-state-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.contact-state-text {
+  max-width: 34ch;
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--color-muted);
+}

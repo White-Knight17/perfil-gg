@@ -19,6 +19,10 @@ vi.mock('gsap', () => ({
     globalTimeline: { getChildren: () => [] },
     quickTo: () => vi.fn(),
     killTweensOf: vi.fn(),
+    matchMedia: () => ({
+      add: vi.fn(),
+      revert: vi.fn(),
+    }),
   },
 }));
 

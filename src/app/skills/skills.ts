@@ -1,84 +1,44 @@
-import {
-  Component,
-  OnDestroy,
-  ViewChild,
-  ElementRef,
-  afterNextRender,
-} from '@angular/core';
-import { MatIconModule } from '@angular/material/icon';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Component } from '@angular/core';
 import { ScrollRevealDirective } from '../directives/scroll-reveal.directive';
-import { AnimationConfigService } from '../services/animation-config.service';
+
+export interface Skill {
+  name: string;
+  level: number;
+}
+
+export type SkillTier = 'Core' | 'Avanzado' | 'Complementario';
+
+export interface SkillGroup {
+  tier: SkillTier;
+  skills: Skill[];
+}
+
+const TIER_ORDER: readonly SkillTier[] = ['Core', 'Avanzado', 'Complementario'];
+
+/** Maps the existing 0-100 level onto an honest three-tier label. */
+function tierFor(level: number): SkillTier {
+  if (level >= 85) return 'Core';
+  if (level >= 75) return 'Avanzado';
+  return 'Complementario';
+}
+
+/** Groups a skill list by tier, preserving order and dropping empty tiers. */
+function groupSkills(skills: Skill[]): SkillGroup[] {
+  return TIER_ORDER.map((tier) => ({
+    tier,
+    skills: skills.filter((skill) => tierFor(skill.level) === tier),
+  })).filter((group) => group.skills.length > 0);
+}
 
 @Component({
   selector: 'app-skills',
   standalone: true,
-  imports: [MatIconModule, ScrollRevealDirective],
+  imports: [ScrollRevealDirective],
   templateUrl: './skills.html',
   styleUrl: './skills.css',
 })
-export class Skills implements OnDestroy {
-  @ViewChild('skillsSection') skillsSection!: ElementRef<HTMLElement>;
-
-  private scrollTrigger?: ScrollTrigger;
-  private barTweens: gsap.core.Tween[] = [];
-
-  constructor(
-    private readonly animationConfig: AnimationConfigService,
-  ) {
-    afterNextRender(() => {
-      this.animateSkillBars();
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.barTweens.forEach((t) => t.kill());
-    this.barTweens = [];
-    this.scrollTrigger?.kill();
-  }
-
-  /**
-   * Animate all `.skill-fill` bars from 0% to their target percentage
-   * using GSAP ScrollTrigger scrub.
-   */
-  private animateSkillBars(): void {
-    const fills: HTMLElement[] = Array.from(
-      this.skillsSection.nativeElement.querySelectorAll('.skill-fill'),
-    );
-    if (!fills.length) return;
-
-    // Store target widths and set initial to 0
-    const targets: { el: HTMLElement; level: number }[] = fills.map((el) => {
-      const level = parseInt(el.dataset['level'] ?? '0', 10);
-      el.style.width = '0%';
-      return { el, level };
-    });
-
-    if (this.animationConfig.reducedMotion()) {
-      targets.forEach(({ el, level }) => {
-        el.style.width = `${level}%`;
-      });
-      return;
-    }
-
-    targets.forEach(({ el, level }) => {
-      const tween = gsap.to(el, {
-        width: `${level}%`,
-        duration: 1.5,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: this.skillsSection.nativeElement,
-          start: 'top 75%',
-          toggleActions: 'play none none none',
-          scroller: document.body, // Required: Lenis uses body as scroller proxy
-        },
-      });
-      this.barTweens.push(tween);
-    });
-  }
-
-  frontendSkills = [
+export class Skills {
+  readonly frontendSkills: Skill[] = [
     { name: 'Angular', level: 90 },
     { name: 'TypeScript', level: 85 },
     { name: 'SASS / CSS3', level: 80 },
@@ -88,7 +48,7 @@ export class Skills implements OnDestroy {
     { name: 'Angular Material', level: 85 },
   ];
 
-  backendSkills = [
+  readonly backendSkills: Skill[] = [
     { name: 'NestJS', level: 85 },
     { name: 'Node.js', level: 90 },
     { name: 'Express', level: 80 },
@@ -97,13 +57,13 @@ export class Skills implements OnDestroy {
     { name: 'RESTful APIs', level: 90 },
   ];
 
-  databaseSkills = [
+  readonly databaseSkills: Skill[] = [
     { name: 'PostgreSQL', level: 80 },
     { name: 'MySQL', level: 75 },
     { name: 'MongoDB', level: 70 },
   ];
 
-  aiSkills = [
+  readonly aiSkills: Skill[] = [
     { name: 'Agentes Autónomos', level: 85 },
     { name: 'Prompt Engineering', level: 80 },
     { name: 'Integración de LLMs', level: 75 },
@@ -111,10 +71,15 @@ export class Skills implements OnDestroy {
     { name: 'Procesamiento de Lenguaje Natural', level: 75 },
   ];
 
-  toolsSkills = [
+  readonly toolsSkills = [
     { name: 'Docker', class: 'fa-brands fa-docker tool-icon-docker' },
     { name: 'Git / GitHub', class: 'fa-brands fa-github tool-icon-github' },
     { name: 'Metodologías Ágiles', class: 'fa-solid fa-rotate tool-icon-agile' },
     { name: 'UML / DER', class: 'fa-solid fa-diagram-project tool-icon-uml' },
   ];
+
+  readonly frontendGroups = groupSkills(this.frontendSkills);
+  readonly backendGroups = groupSkills(this.backendSkills);
+  readonly databaseGroups = groupSkills(this.databaseSkills);
+  readonly aiGroups = groupSkills(this.aiSkills);
 }

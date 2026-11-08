@@ -26,6 +26,12 @@ export class AnimationConfigService {
     this.durationMultiplier = signal(1);
 
     if (isPlatformBrowser(platformId)) {
+      // Guarded: jsdom/test environments may not implement matchMedia, and
+      // SSR must never touch it.
+      if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
+        return;
+      }
+
       const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
       this.reducedMotion.set(mq.matches);
       this.durationMultiplier.set(mq.matches ? 0 : 1);

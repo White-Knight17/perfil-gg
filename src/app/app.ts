@@ -42,7 +42,7 @@ import { PreloaderService } from './services/preloader.service';
 })
 export class App implements OnDestroy {
   /** Currently visible section ID for nav highlight */
-  protected activeSection = 'home';
+  protected readonly activeSection = signal('home');
 
   /** Mobile hamburger menu open state */
   protected mobileMenuOpen = false;
@@ -56,7 +56,7 @@ export class App implements OnDestroy {
   private intersectionObserver?: IntersectionObserver;
 
   /** Section IDs to spy on, in visual order */
-  private readonly sectionIds = ['home', 'projects', 'skills', 'showcase', 'contact'];
+  private readonly sectionIds = ['home', 'projects', 'showcase', 'skills', 'contact'];
 
   // ---------------------------------------------------------------------------
   // Mobile menu template refs
@@ -300,25 +300,15 @@ export class App implements OnDestroy {
 
     this.intersectionObserver = new IntersectionObserver(
       (entries) => {
-        // Find the entry with the highest intersection ratio
-        let maxRatio = 0;
-        let maxId = this.activeSection;
-
+        // A thin band at the viewport centre decides which section owns the
+        // nav highlight — robust for sections taller than the viewport.
         for (const entry of entries) {
-          if (entry.intersectionRatio > maxRatio) {
-            maxRatio = entry.intersectionRatio;
-            maxId = entry.target.id;
+          if (entry.isIntersecting) {
+            this.activeSection.set(entry.target.id);
           }
         }
-
-        if (maxRatio > 0) {
-          this.activeSection = maxId;
-        }
       },
-      {
-        rootMargin: '-80px 0px -40% 0px',
-        threshold: [0.3, 0.5, 0.7],
-      },
+      { rootMargin: '-45% 0px -45% 0px', threshold: 0 },
     );
 
     sections.forEach((section) => this.intersectionObserver!.observe(section));
