@@ -215,41 +215,128 @@
   justify-content: space-between;
 }
 
-/* ══════════════════════════════════════════════════════════════════
-   Static mode — small screens and prefers-reduced-motion
-   ══════════════════════════════════════════════════════════════════ */
-.showcase-static {
-  height: auto;
-}
-
-.showcase-static .showcase-container {
-  height: auto;
-}
-
-.showcase-static .showcase-track {
-  flex-direction: column;
-  align-items: stretch;
-  gap: 3rem;
-  transform: none !important;
-}
-
-.showcase-static .project-slide {
-  width: 100%;
-}
-
-.showcase-static .project-content {
-  grid-template-columns: minmax(0, 1fr);
-  gap: 1.75rem;
-}
-
-.showcase-static .project-slide-end-spacer {
+.showcase-hint-mobile {
   display: none;
 }
 
-.showcase-static .mockup-container img {
-  max-height: none;
+/* ══════════════════════════════════════════════════════════════════
+   Carousel mode — phones and tablets.
+   Layout is driven by CSS (not a one-time JS check), so rotating the
+   device or resizing the window can never leave a broken pinned slide.
+   ══════════════════════════════════════════════════════════════════ */
+@media (max-width: 1023px) and (prefers-reduced-motion: no-preference) {
+  .showcase-section {
+    height: auto;
+  }
+
+  .showcase-container {
+    height: auto;
+  }
+
+  .showcase-hint-desktop {
+    display: none;
+  }
+
+  .showcase-hint-mobile {
+    display: inline;
+  }
+
+  .showcase-track {
+    flex: none;
+    gap: 0.85rem;
+    padding-block: 0.25rem 0.75rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: clamp(1.25rem, 4vw, 2.75rem);
+    transform: none !important;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .showcase-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .project-slide {
+    display: flex;
+    width: 86%;
+    max-width: 30rem;
+    scroll-snap-align: center;
+  }
+
+  .project-slide-end-spacer {
+    display: none;
+  }
+
+  .project-content {
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    gap: 1.1rem;
+  }
+
+  .mockup-container img {
+    max-height: none;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    object-position: top center;
+  }
+
+  .project-info {
+    gap: 0.75rem;
+  }
+
+  .showcase-footer {
+    margin-top: 1.5rem;
+  }
+
+  .showcase-progress {
+    display: none;
+  }
 }
 
-.showcase-static .showcase-footer {
-  margin-top: 2.5rem;
+/* Reduced motion: no pinned scrub and no horizontal work — read it stacked */
+@media (prefers-reduced-motion: reduce) {
+  .showcase-section {
+    height: auto;
+  }
+
+  .showcase-container {
+    height: auto;
+  }
+
+  .showcase-track {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2.75rem;
+    overflow: visible;
+    padding-block: 0;
+    transform: none !important;
+  }
+
+  .project-slide {
+    width: 100%;
+    max-width: none;
+  }
+
+  .project-slide-end-spacer {
+    display: none;
+  }
+
+  .project-content {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+
+  .mockup-container img {
+    max-height: none;
+  }
+
+  .showcase-footer {
+    margin-top: 2rem;
+  }
+
+  .showcase-progress {
+    display: none;
+  }
 }
